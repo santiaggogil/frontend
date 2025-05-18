@@ -61,6 +61,14 @@ const routes: Routes =[
         loadChildren: () => import('src/app/pages/packages/packages.module').then(m => m.PackagesModule)
       }
     ]
+  },{
+    path: 'reviews',
+    children: [
+      {
+        path: '',
+        loadChildren: () => import('src/app/pages/reviews/reviews.module').then(m => m.ReviewsModule)
+      }
+    ]
   }
 ];
 
