@@ -85,6 +85,14 @@ const routes: Routes =[
         loadChildren: () => import('src/app/pages/bills/bills.module').then(m => m.BillsModule)
       }
     ]
+  },{
+    path: 'quotas',
+    children: [
+      {
+        path: '',
+        loadChildren: () => import('src/app/pages/quotas/quotas.module').then(m => m.QuotasModule)
+      }
+    ]
   }
 ];
 
