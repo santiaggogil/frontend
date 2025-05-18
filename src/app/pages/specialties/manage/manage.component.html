@@ -7,51 +7,76 @@
     <div class="col">
       <div class="card shadow">
         <div class="card-header bg-transparent">
-          <h3 class="mb-0" *ngIf="mode==1">Detalle</h3>
-          <h3 class="mb-0" *ngIf="mode==2">Creacion</h3>
-          <h3 class="mb-0" *ngIf="mode==3">Actualizacion</h3>
+          <h3 class="mb-0" *ngIf="mode === 1">Detalle de Especialidad</h3>
+          <h3 class="mb-0" *ngIf="mode === 2">Creación de Especialidad</h3>
+          <h3 class="mb-0" *ngIf="mode === 3">Actualización de Especialidad</h3>
         </div>
-        <form class="form" *ngIf="theFormGroup" [formGroup]="theFormGroup">
+
+        <!-- El *ngIf="theFormGroup" es crucial para esperar a que el formulario esté inicializado -->
+        <form class="form" *ngIf="theFormGroup" [formGroup]="theFormGroup" (ngSubmit)="mode === 2 ? create() : (mode === 3 ? update() : null)">
           <div class="card-body container">
-            <div class = "row">
-              <div class = "col-3">ID</div>
-              <div class = "col-9"><input type="text" [(ngModel)]="specialty.id" disabled></div>
+            <!-- ID (Solo visualización, no es parte del formGroup para edición) -->
+            <div class="row mb-3" *ngIf="mode === 1 || mode === 3"> <!-- Mostrar solo en vista o actualización -->
+              <div class="col-md-3 col-form-label">ID</div>
+              <div class="col-md-9">
+                <input type="text" class="form-control-plaintext" [value]="specialty?.id" readonly>
+              </div>
             </div>
-            <div class = "row">
-              <div class = "col-3">Nombre</div>
-              <div class = "col-9"><input type="text" [disabled]="mode==1" formControlName="name">
-                <div
-                  *ngIf="getTheFormGroup.name.errors && (getTheFormGroup.name.dirty || getTheFormGroup.name.touched || trySend)">
-                    <strong *ngIf="getTheFormGroup.name.errors.required"
-                      class="msnError">Requerido</strong>
-                    <strong *ngIf="getTheFormGroup.name.errors?.minlength" class="msnError">Inválido</strong>
+
+            <!-- Nombre -->
+            <div class="row mb-3">
+              <label for="name" class="col-md-3 col-form-label">Nombre</label>
+              <div class="col-md-9">
+                <input type="text" id="name" class="form-control" formControlName="name"
+                       [ngClass]="{'is-invalid': trySend && formControls.name.errors}">
+                <div *ngIf="trySend && formControls.name.errors" class="invalid-feedback">
+                  <strong *ngIf="formControls.name.errors.required">El nombre es requerido.</strong>
+                  <strong *ngIf="formControls.name.errors.minlength">
+                    El nombre debe tener al menos {{ formControls.name.errors.minlength.requiredLength }} caracteres.
+                  </strong>
+                  <strong *ngIf="formControls.name.errors.maxlength">
+                    El nombre no debe exceder los {{ formControls.name.errors.maxlength.requiredLength }} caracteres.
+                  </strong>
+                  <!-- <strong *ngIf="formControls.name.errors.pattern">El nombre contiene caracteres inválidos.</strong> -->
                 </div>
               </div>
             </div>
 
-            <div class = "row">
-              <div class = "col-3">Descripcion</div>
-              <div class = "col-9"><input type="text" [disabled]="mode==1" formControlName="description">
-                <div
-                  *ngIf="getTheFormGroup.description.errors && (getTheFormGroup.description.dirty || getTheFormGroup.description.touched || trySend)">
-                      <strong *ngIf="getTheFormGroup.description.errors.min" class="msnError">Valor mínimo debe ser 1</strong>
-                      <strong *ngIf="getTheFormGroup.description.errors.max" class="msnError">Valor máximo 100 </strong>
-                      <strong *ngIf="getTheFormGroup.description.errors.required" class="msnError">Requerido</strong>
+            <!-- Descripción -->
+            <div class="row mb-3">
+              <label for="description" class="col-md-3 col-form-label">Descripción</label>
+              <div class="col-md-9">
+                <textarea id="description" class="form-control" formControlName="description" rows="3"
+                          [ngClass]="{'is-invalid': trySend && formControls.description.errors}"></textarea>
+                <div *ngIf="trySend && formControls.description.errors" class="invalid-feedback">
+                  <strong *ngIf="formControls.description.errors.required">La descripción es requerida.</strong>
+                  <strong *ngIf="formControls.description.errors.minlength">
+                    La descripción debe tener al menos {{ formControls.description.errors.minlength.requiredLength }} caracteres.
+                  </strong>
+                  <strong *ngIf="formControls.description.errors.maxlength">
+                    La descripción no debe exceder los {{ formControls.description.errors.maxlength.requiredLength }} caracteres.
+                  </strong>
+                   <!-- <strong *ngIf="formControls.description.errors.pattern">La descripción contiene caracteres inválidos.</strong> -->
                 </div>
               </div>
             </div>
 
-            <br>
-            <div class = "row">
-              <div class = "col-3"></div>
-              <div class = "col-9">
-                <button *ngIf="mode==1" class="btn-primary btn-block" (click)="back()">Volver</button>
-                <button *ngIf="mode==2" class="btn-primary btn-block" (click)="create()">Crear</button>
-                <button *ngIf="mode==3" class="btn-primary btn-block" (click)="update()">Actualizar</button>
+            <hr>
+            <div class="row">
+              <div class="col-md-9 offset-md-3">
+                <button type="button" class="btn btn-secondary me-2" (click)="back()">
+                  <ng-container *ngIf="mode === 1">Volver</ng-container>
+                  <ng-container *ngIf="mode === 2 || mode === 3">Cancelar</ng-container>
+                </button>
+                <button *ngIf="mode === 2" type="submit" class="btn btn-primary" [disabled]="theFormGroup.pristine && !trySend">Crear</button>
+                <button *ngIf="mode === 3" type="submit" class="btn btn-primary" [disabled]="theFormGroup.pristine && !trySend">Actualizar</button>
               </div>
             </div>
           </div>
         </form>
+        <div *ngIf="!theFormGroup" class="card-body">
+            <p>Cargando formulario...</p>
+        </div>
       </div>
     </div>
   </div>

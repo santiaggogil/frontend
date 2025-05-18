@@ -1,0 +1,85 @@
+<div class="header bg-gradient-danger pb-8 pt-5 pt-md-8">
+</div>
+<!-- Page content -->
+<div class="container-fluid mt--7">
+  <!-- Table -->
+  <div class="row">
+    <div class="col">
+      <div class="card shadow">
+        <div class="card-header bg-transparent">
+          <h3 class="mb-0" *ngIf="mode === 1">Detalle de Operador</h3>
+          <h3 class="mb-0" *ngIf="mode === 2">Creación de Operador</h3>
+          <h3 class="mb-0" *ngIf="mode === 3">Actualización de Operador</h3>
+        </div>
+
+        <form class="form" *ngIf="theFormGroup" [formGroup]="theFormGroup" (ngSubmit)="mode === 2 ? create() : (mode === 3 ? update() : null)">
+          <div class="card-body container">
+            <!-- ID (Solo visualización) -->
+            <div class="row mb-3" *ngIf="(mode === 1 || mode === 3) && operator?.id">
+              <div class="col-md-3 col-form-label">ID</div>
+              <div class="col-md-9">
+                <input type="text" class="form-control-plaintext" [value]="operator?.id" readonly>
+              </div>
+            </div>
+
+            <!-- Usuario (ID de Usuario) -->
+            <div class="row mb-3">
+              <label for="user_id" class="col-md-3 col-form-label">Usuario (ID)</label>
+              <div class="col-md-9">
+                <input type="text" id="user_id" class="form-control" formControlName="user_id"
+                       [ngClass]="{'is-invalid': trySend && formControls.user_id?.errors && formControls.user_id.enabled}">
+                <div *ngIf="trySend && formControls.user_id?.errors && formControls.user_id.enabled" class="invalid-feedback">
+                  <strong *ngIf="formControls.user_id.errors.required">El ID de usuario es requerido.</strong>
+                  <strong *ngIf="formControls.user_id.errors.maxlength">
+                    El ID de Usuario no debe exceder los {{ formControls.user_id.errors.maxlength.requiredLength }} caracteres.
+                  </strong>
+                </div>
+              </div>
+            </div>
+
+            <!-- Teléfono -->
+            <div class="row mb-3">
+              <label for="phone" class="col-md-3 col-form-label">Teléfono</label>
+              <div class="col-md-9">
+                <input type="tel" id="phone" class="form-control" formControlName="phone"
+                       [ngClass]="{'is-invalid': trySend && formControls.phone?.errors}">
+                <div *ngIf="trySend && formControls.phone?.errors" class="invalid-feedback">
+                  <strong *ngIf="formControls.phone.errors.required">El Teléfono es requerido.</strong>
+                  <strong *ngIf="formControls.phone.errors.pattern">El formato del teléfono no es válido.</strong>
+                </div>
+              </div>
+            </div>
+
+            <!-- Identificación -->
+            <div class="row mb-3">
+              <label for="identification" class="col-md-3 col-form-label">Identificación</label>
+              <div class="col-md-9">
+                <input type="text" id="identification" class="form-control" formControlName="identification"
+                       [ngClass]="{'is-invalid': trySend && formControls.identification?.errors}">
+                <div *ngIf="trySend && formControls.identification?.errors" class="invalid-feedback">
+                  <strong *ngIf="formControls.identification.errors.required">La Identificación es requerida.</strong>
+                  <strong *ngIf="formControls.identification.errors.min">La Identificación debe ser un número positivo mayor a 0.</strong>
+                </div>
+              </div>
+            </div>
+
+            <hr>
+            <div class="row">
+              <div class="col-md-9 offset-md-3">
+                <button type="button" class="btn btn-secondary me-2" (click)="back()">
+                  <ng-container *ngIf="mode === 1">Volver</ng-container>
+                  <ng-container *ngIf="mode === 2 || mode === 3">Cancelar</ng-container>
+                </button>
+                <button *ngIf="mode === 2" type="submit" class="btn btn-primary" [disabled]="!theFormGroup.valid && trySend">Crear</button>
+                <button *ngIf="mode === 3" type="submit" class="btn btn-primary" [disabled]="!theFormGroup.valid && trySend">Actualizar</button>
+              </div>
+            </div>
+          </div>
+        </form>
+        <div *ngIf="!theFormGroup" class="card-body">
+            <p>Cargando formulario...</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

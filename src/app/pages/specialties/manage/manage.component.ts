@@ -1,11 +1,10 @@
 import { Component, OnInit } from '@angular/core';
-
-import { ActivatedRoute } from '@angular/router';
-import { Specialty } from 'src/app/models/specialty.model';
-import { SpecialtyService } from 'src/app/services/specialty.service'; // AÑADE ESTA LÍNEA
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms'; // FormControl no es necesario si usas FormBuilder para todo
 import Swal from 'sweetalert2';
-import { Form, FormBuilder, FormGroup, Validators } from '@angular/forms';
+
+import { Specialty } from 'src/app/models/specialty.model';
+import { SpecialtyService } from 'src/app/services/specialty.service';
 
 @Component({
   selector: 'app-manage',
@@ -14,14 +13,19 @@ import { Form, FormBuilder, FormGroup, Validators } from '@angular/forms';
 })
 export class ManageComponent implements OnInit {
 
-  mode: number; //1 - view, 2 - create, 3 - update
+  mode: number = 1; // 1 - view, 2 - create, 3 - update (default to view)
   specialty: Specialty;
-  theFormGroup: FormGroup; //policia del formulario
-  trySend: boolean; // variable para controlar el envío del formulario
+  theFormGroup!: FormGroup; // Usar "!" para indicar que se inicializará en constructor/ngOnInit
+  trySend: boolean = false;
 
-  constructor(private activateRoute:ActivatedRoute, private specialtyService: SpecialtyService, private router:Router, private theFormBuilder: FormBuilder) { // inyeccion de activatedRoute para obtener la url activa en el navegador, esto toma 'fotos'// inyeccion de activatedRoute para obtener la url activa en el navegador, esto toma 'fotos'
-    this.specialty={id:0}; // inicializa el objeto specialty
-    this.configFormGroup(); // inicializa el formulario
+  constructor(
+    private activateRoute: ActivatedRoute,
+    private specialtyService: SpecialtyService,
+    private router: Router,
+    private fb: FormBuilder // Renombrado a fb para convención (FormBuilder)
+  ) {
+    this.specialty = { id: 0, name: '', description: '' }; // Inicializar con estructura completa
+    this.configFormGroup(); // Inicializar la estructura del formulario
   }
 
   ngOnInit(): void {
@@ -33,65 +37,64 @@ export class ManageComponent implements OnInit {
     } else if (currentUrl.includes('update')) {
       this.mode = 3;
     }
-    if (this.activateRoute.snapshot.params.id) { //esto es para traer el id de la url
-      this.specialty.id = this.activateRoute.snapshot.params.id
-      this.getSpecialty(this.specialty.id)
+
+    // Si es modo vista o actualización, y hay un ID, obtener los datos
+    if ((this.mode === 1 || this.mode === 3) && this.activateRoute.snapshot.params['id']) {
+      this.specialty.id = +this.activateRoute.snapshot.params['id']; // Convertir a número con el +
+      this.getSpecialty(this.specialty.id);
+    } else if (this.mode === 1) { // Si es modo vista pero no hay ID (aunque no debería pasar con rutas bien definidas)
+        this.theFormGroup.disable(); // Deshabilitar si es solo vista
     }
-      this.configFormGroup(); //AHORA se llama en el momento correcto
+    // Para el modo creación, el formulario ya está configurado y vacío
   }
-
-  getSpecialty(id: number) {
-    this.specialtyService.view(id).subscribe({
-      next: (specialty) => {
-        this.specialty = specialty;
-        // Actualizar formulario con los datos recibidos
-       this.theFormGroup.patchValue({
-        name: specialty.name,
-        description: specialty.description
-      });
-      console.log("Specialty fetched successfully", this.specialty);
-    },
-      error: (error) => {
-        console.error("Error fetching specialty", error);
-      }
-    });
-  }
-
-
-  // configFormGroup() { //metodo para definir las reglas
-  //   this.theFormGroup = this.theFormBuilder.group({
-  //     // primer elemento del vector, valor por defecto
-  //     // lista, serán las reglas
-  //     name: ['', [Validators.required, Validators.min(1), Validators.max(100)]],
-  //     region: ['', [Validators.required, Validators.minLength(2)]]
-  //   })
-  // }
 
   configFormGroup() {
-    this.theFormGroup = this.theFormBuilder.group({
+    this.theFormGroup = this.fb.group({
       name: [
-        '',
+        '', // Valor inicial
         [
-          Validators.required,              // campo obligatorio
-          Validators.minLength(2),          // mínimo 2 caracteres
-          Validators.maxLength(100),        // máximo 100 caracteres
-          Validators.pattern('.*') // solo letras y espacios
+          Validators.required,
+          Validators.minLength(3), // Ajustado para un nombre típico
+          Validators.maxLength(100),
+          // Validators.pattern('^[a-zA-Z ]*$') // Ejemplo: solo letras y espacios, si es necesario
         ]
       ],
       description: [
-        '',
+        '', // Valor inicial
         [
-          Validators.required,              // campo obligatorio
-          Validators.minLength(2),          // mínimo 2 caracteres
-          Validators.maxLength(50),         // máximo 50 caracteres
-          Validators.pattern('.*') // solo letras y espacios
+          Validators.required,
+          Validators.minLength(5), // Ajustado para una descripción
+          Validators.maxLength(250), // Ajustado
+          // Validators.pattern('^[a-zA-Z0-9 .,]*$') // Ejemplo: alfanumérico, puntos, comas, espacios
         ]
       ]
     });
   }
 
-  get getTheFormGroup() {
-    return this.theFormGroup.controls
+  getSpecialty(id: number) {
+    this.specialtyService.view(id).subscribe({
+      next: (data) => {
+        this.specialty = data;
+        // Poblar el formulario con los datos de la especialidad
+        this.theFormGroup.patchValue({
+          name: this.specialty.name,
+          description: this.specialty.description
+        });
+        if (this.mode === 1) {
+          this.theFormGroup.disable(); // Deshabilitar todo el formulario en modo vista
+        }
+        console.log("Specialty fetched successfully", this.specialty);
+      },
+      error: (error) => {
+        console.error("Error fetching specialty", error);
+        Swal.fire('Error', 'No se pudo cargar la especialidad.', 'error');
+        this.router.navigate(['/specialties/list']); // Redirigir si hay error
+      }
+    });
+  }
+
+  get formControls() { // Getter más corto para acceder a los controles en el HTML
+    return this.theFormGroup.controls;
   }
 
   back() {
@@ -99,71 +102,51 @@ export class ManageComponent implements OnInit {
   }
 
   create() {
-    this.trySend = true; // se activa el envío del formulario
+    this.trySend = true;
     if (this.theFormGroup.invalid) {
-      Swal.fire({
-        title: 'Error!',
-        text: 'Por favor, complete todos los campos requeridos.',
-        icon: 'error',
-        confirmButtonText: 'Aceptar'
-      })
-      return
+      Swal.fire('Formulario Inválido', 'Por favor, complete todos los campos requeridos correctamente.', 'error');
+      // Marcar todos como tocados para mostrar errores
+      Object.values(this.theFormGroup.controls).forEach(control => control.markAsTouched());
+      return;
     }
 
-    const data = this.theFormGroup.value;
+    const dataToCreate: Specialty = this.theFormGroup.value;
 
-    this.specialtyService.create(data).subscribe({
-      next: (specialty) => {
-        console.log("specialty created successfully", specialty);
-        Swal.fire({
-          title: 'Creado',
-          text: "Estado creado correctamente",
-          icon: 'success',
-        });
+    this.specialtyService.create(dataToCreate).subscribe({
+      next: () => { // No necesitamos la respuesta 'specialty' aquí usualmente
+        Swal.fire('Creado', "Especialidad creada correctamente", 'success');
         this.router.navigate(['/specialties/list']);
       },
       error: (error) => {
         console.error("Error creating specialty", error);
+        Swal.fire('Error', 'No se pudo crear la especialidad.', 'error');
       }
     });
   }
 
   update() {
-    this.trySend = true; // se activa el envío del formulario
+    this.trySend = true;
     if (this.theFormGroup.invalid) {
-      Swal.fire({
-        title: 'Error!',
-        text: 'Por favor, complete todos los campos requeridos.',
-        icon: 'error',
-        confirmButtonText: 'Aceptar'
-      })
-      return
+      Swal.fire('Formulario Inválido', 'Por favor, complete todos los campos requeridos correctamente.', 'error');
+      Object.values(this.theFormGroup.controls).forEach(control => control.markAsTouched());
+      return;
     }
-    this.specialtyService.update(this.specialty).subscribe({
-      next: (specialty) => {
-        console.log("specialty updated successfully", specialty);
-        Swal.fire({
-          title: 'Actualizado',
-          text: "Estado actualizado correctamente",
-          icon: 'success',
-        });
+
+    // Combinar los datos del formulario con el ID existente
+    const dataToUpdate: Specialty = {
+      ...this.theFormGroup.value, // toma name, description del formulario
+      id: this.specialty.id       // añade el id que ya teníamos
+    };
+
+    this.specialtyService.update(dataToUpdate).subscribe({
+      next: () => {
+        Swal.fire('Actualizado', "Especialidad actualizada correctamente", 'success');
         this.router.navigate(['/specialties/list']);
       },
       error: (error) => {
         console.error("Error updating specialty", error);
-      }
-    });
-  }
-
-  view() {
-    this.specialtyService.view(this.specialty.id).subscribe({
-      next: (specialty) => {
-        console.log("specialty viewed successfully", specialty);
-      },
-      error: (error) => {
-        console.error("Error viewing specialty", error);
+        Swal.fire('Error', 'No se pudo actualizar la especialidad.', 'error');
       }
     });
   }
 }
-
