@@ -7,31 +7,31 @@
     <div class="col">
       <div class="card shadow">
         <div class="card-header bg-transparent">
-          <h3 class="mb-0">Evidencias</h3>
+          <h3 class="mb-0">Facturas</h3>
         </div>
         <div class="card-body">
           <div class="table-responsive">
             <table class="table">
               <tr>
                 <th scope="col">ID</th>
-                <th scope="col">Marca</th>
-                <th scope="col">Modelo</th>
-                <th scope="col">Numero serial</th>
-                <th scope="col">ID servicio</th>
+                <th scope="col">Issue Date</th>
+                <th scope="col">Due Date</th>
+                <th scope="col">Total</th>
+                <th scope="col">Estado</th>
                 <th scope="col" class="text-left" > <!-- Celda para el botón Crear, alineado a la derecha -->
                   <button class="btn btn-success" (click)="create()">Crear</button>
                 </th>
               </tr>
-              <tr *ngFor="let evidence of evidences">
-                <td>{{ evidence.id }}</td>
-                <td>{{ evidence.brand }}</td>
-                <td>{{ evidence.model }}</td>
-                <td>{{ evidence.serial_number }}</td>
-                <td>{{ evidence.service_id }}</td>
+              <tr *ngFor="let bill of bills">
+                <td>{{ bill.id }}</td>
+                <td>{{ bill.issue_date }}</td>
+                <td>{{ bill.due_date }}</td>
+                <td>{{ bill.total_amount }}</td>
+                <td>{{ bill.status }}</td>
                 <td>
-                  <button class="btn btn-primary" (click)="edit(evidence.id)">Editar</button>
-                  <button class="btn btn-primary" (click)="view(evidence.id)">Ver</button>
-                  <button class="btn btn-danger" (click)="delete(evidence.id)">Eliminar</button>
+                  <button class="btn btn-primary" (click)="edit(bill.id)">Editar</button>
+                  <button class="btn btn-primary" (click)="view(bill.id)">Ver</button>
+                  <button class="btn btn-danger" (click)="delete(bill.id)">Eliminar</button>
                 </td>
             </table>
           </div>

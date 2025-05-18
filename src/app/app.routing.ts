@@ -77,6 +77,14 @@ const routes: Routes =[
         loadChildren: () => import('src/app/pages/evidences/evidences.module').then(m => m.EvidencesModule)
       }
     ]
+  },{
+    path: 'bills',
+    children: [
+      {
+        path: '',
+        loadChildren: () => import('src/app/pages/bills/bills.module').then(m => m.BillsModule)
+      }
+    ]
   }
 ];
 
