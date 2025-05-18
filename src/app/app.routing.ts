@@ -53,6 +53,14 @@ const routes: Routes =[
         loadChildren: () => import('src/app/pages/services/services.module').then(m => m.ServicesModule)
       }
     ]
+  },{
+    path: 'packages',
+    children: [
+      {
+        path: '',
+        loadChildren: () => import('src/app/pages/packages/packages.module').then(m => m.PackagesModule)
+      }
+    ]
   }
 ];
 
