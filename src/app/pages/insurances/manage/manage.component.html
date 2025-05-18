@@ -1,0 +1,76 @@
+<div class="header bg-gradient-danger pb-8 pt-5 pt-md-8">
+</div>
+
+<!-- Page content -->
+<div class="container-fluid mt--7">
+  <!-- Form -->
+  <div class="row">
+    <div class="col">
+      <div class="card shadow">
+        <div class="card-header bg-transparent">
+          <!-- Títulos adaptados para insurance -->
+          <h3 class="mb-0" *ngIf="mode === 1">Detalle de Aseguradora</h3>
+          <h3 class="mb-0" *ngIf="mode === 2">Crear Nueva Aseguradora</h3>
+          <h3 class="mb-0" *ngIf="mode === 3">Actualizar Aseguradora</h3>
+        </div>
+
+        <form class="form" *ngIf="theFormGroup" [formGroup]="theFormGroup" (ngSubmit)="mode === 2 ? create() : (mode === 3 ? update() : null)">
+          <div class="card-body container">
+            <!-- ID Aseguradora (Solo visualización) -->
+            <div class="row mb-3" *ngIf="(mode === 1 || mode === 3) && insurance?.id">
+              <div class="col-md-3 col-form-label">ID Aseguradora</div>
+              <div class="col-md-9">
+                <input type="text" class="form-control-plaintext" [value]="insurance?.id" readonly>
+              </div>
+            </div>
+
+            <!-- Tipo de Aseguradora -->
+            <div class="row mb-3">
+              <label for="type" class="col-md-3 col-form-label">Tipo</label>
+              <div class="col-md-9">
+                <input type="text" id="type" class="form-control" formControlName="type"
+                       [ngClass]="{'is-invalid': trySend && formControls.type?.errors}">
+                <div *ngIf="trySend && formControls.type?.errors" class="invalid-feedback">
+                  <strong *ngIf="formControls.type.errors.required">El tipo es requerido.</strong>
+                  <strong *ngIf="formControls.type.errors.maxlength">
+                    El tipo no debe exceder los {{ formControls.type.errors.maxlength.requiredLength }} caracteres.
+                  </strong>
+                </div>
+              </div>
+            </div>
+
+            <!-- Compañía Aseguradora -->
+            <div class="row mb-3">
+              <label for="company" class="col-md-3 col-form-label">Compañía</label>
+              <div class="col-md-9">
+                <input type="text" id="company" class="form-control" formControlName="company"
+                       [ngClass]="{'is-invalid': trySend && formControls.company?.errors}">
+                <div *ngIf="trySend && formControls.company?.errors" class="invalid-feedback">
+                  <strong *ngIf="formControls.company.errors.required">La compañía es requerida.</strong>
+                  <strong *ngIf="formControls.company.errors.maxlength">
+                    La compañía no debe exceder los {{ formControls.company.errors.maxlength.requiredLength }} caracteres.
+                  </strong>
+                </div>
+              </div>
+            </div>
+
+            <hr>
+            <div class="row">
+              <div class="col-md-9 offset-md-3">
+                <button type="button" class="btn btn-secondary me-2" (click)="back()">
+                  <ng-container *ngIf="mode === 1">Volver</ng-container>
+                  <ng-container *ngIf="mode === 2 || mode === 3">Cancelar</ng-container>
+                </button>
+                <button *ngIf="mode === 2" type="submit" class="btn btn-primary" [disabled]="theFormGroup.invalid && trySend">Crear</button>
+                <button *ngIf="mode === 3" type="submit" class="btn btn-primary" [disabled]="theFormGroup.invalid && trySend">Actualizar</button>
+              </div>
+            </div>
+          </div>
+        </form>
+        <div *ngIf="!theFormGroup" class="card-body">
+            <p>Cargando formulario...</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

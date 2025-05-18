@@ -1,0 +1,47 @@
+<div class="header bg-gradient-danger pb-8 pt-5 pt-md-8">
+</div>
+
+<div class="container-fluid mt--7">
+  <div class="row">
+    <div class="col">
+      <div class="card shadow">
+        <div class="card-header bg-transparent">
+          <h3 class="mb-0">Mantenimientos</h3>
+        </div>
+        <div class="card-body">
+          <div class="table-responsive">
+            <table class="table">
+                <tr>
+                  <th scope="col">ID</th>
+                  <th scope="col">Descripción</th>
+                  <th scope="col">ID Máquina</th>
+                  <th scope="col">Costo</th>
+                  <th scope="col">Fecha</th>
+                  <th scope="col">Opciones</th>
+                  <th scope="col" class="text-left">
+                    <button class="btn btn-success" (click)="create()">Crear</button>
+                  </th>
+                </tr>
+
+                <tr *ngFor="let maintenance of maintenances">
+                  <td>{{ maintenance.id }}</td>
+                  <td>{{ maintenance.description }}</td>
+                  <td>{{ maintenance.machine_id }}</td>
+                  <td>{{ maintenance.cost | currency:'USD':'symbol':'1.2-2' }}</td>
+                  <td>{{ maintenance.date | date:'yyyy-MM-dd' }}</td>
+                  <td>
+                    <button class="btn btn-primary" (click)="edit(maintenance.id!)">Editar</button>
+                    <button class="btn btn-primary" (click)="view(maintenance.id!)">Ver</button>
+                    <button class="btn btn-danger" (click)="delete(maintenance.id!)">Eliminar</button>
+                  </td>
+                </tr>
+                <tr *ngIf="!maintenances || maintenances.length === 0">
+                    <td colspan="7" class="text-center">No hay mantenimientos registrados.</td>
+                </tr>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

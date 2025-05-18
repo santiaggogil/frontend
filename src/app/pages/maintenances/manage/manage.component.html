@@ -1,0 +1,96 @@
+<div class="header bg-gradient-danger pb-8 pt-5 pt-md-8">
+</div>
+
+<!-- Page content -->
+<div class="container-fluid mt--7">
+  <!-- Form -->
+  <div class="row">
+    <div class="col">
+      <div class="card shadow">
+        <div class="card-header bg-transparent">
+          <h3 class="mb-0" *ngIf="mode === 1">Detalle de Mantenimiento</h3>
+          <h3 class="mb-0" *ngIf="mode === 2">Crear Nuevo Mantenimiento</h3>
+          <h3 class="mb-0" *ngIf="mode === 3">Actualizar Mantenimiento</h3>
+        </div>
+
+        <form class="form" *ngIf="theFormGroup" [formGroup]="theFormGroup" (ngSubmit)="mode === 2 ? create() : (mode === 3 ? update() : null)">
+          <div class="card-body container">
+            <!-- ID Mantenimiento (Solo visualización) -->
+            <div class="row mb-3" *ngIf="(mode === 1 || mode === 3) && maintenance?.id">
+              <div class="col-md-3 col-form-label">ID Mantenimiento</div>
+              <div class="col-md-9">
+                <input type="text" class="form-control-plaintext" [value]="maintenance?.id" readonly>
+              </div>
+            </div>
+
+            <!-- Descripción -->
+            <div class="row mb-3">
+              <label for="description" class="col-md-3 col-form-label">Descripción</label>
+              <div class="col-md-9">
+                <textarea id="description" class="form-control" formControlName="description" rows="3"
+                       [ngClass]="{'is-invalid': trySend && formControls.description?.errors && formControls.description.enabled && formControls.description.touched}"></textarea>
+                <div *ngIf="trySend && formControls.description?.errors && formControls.description.enabled && formControls.description.touched" class="invalid-feedback">
+                  <strong *ngIf="formControls.description.errors.required">La descripción es requerida.</strong>
+                  <strong *ngIf="formControls.description.errors.maxlength">La descripción no puede exceder los {{ formControls.description.errors.maxlength?.requiredLength }} caracteres.</strong>
+                </div>
+              </div>
+            </div>
+
+            <!-- ID Máquina -->
+            <div class="row mb-3">
+              <label for="machine_id" class="col-md-3 col-form-label">Máquina (ID)</label>
+              <div class="col-md-9">
+                <input type="number" id="machine_id" class="form-control" formControlName="machine_id"
+                       [ngClass]="{'is-invalid': trySend && formControls.machine_id?.errors && formControls.machine_id.enabled && formControls.machine_id.touched}">
+                <div *ngIf="trySend && formControls.machine_id?.errors && formControls.machine_id.enabled && formControls.machine_id.touched" class="invalid-feedback">
+                  <strong *ngIf="formControls.machine_id.errors.required">El ID de la máquina es requerido.</strong>
+                  <strong *ngIf="formControls.machine_id.errors.min">El ID de la máquina debe ser un número positivo (mínimo {{ formControls.machine_id.errors.min?.min }}).</strong>
+                </div>
+              </div>
+            </div>
+
+            <!-- Costo -->
+            <div class="row mb-3">
+              <label for="cost" class="col-md-3 col-form-label">Costo</label>
+              <div class="col-md-9">
+                <input type="number" id="cost" class="form-control" formControlName="cost" step="0.01"
+                       [ngClass]="{'is-invalid': trySend && formControls.cost?.errors && formControls.cost.enabled && formControls.cost.touched}">
+                <div *ngIf="trySend && formControls.cost?.errors && formControls.cost.enabled && formControls.cost.touched" class="invalid-feedback">
+                  <strong *ngIf="formControls.cost.errors.required">El costo es requerido.</strong>
+                  <strong *ngIf="formControls.cost.errors.min">El costo no puede ser negativo (mínimo {{ formControls.cost.errors.min?.min }}).</strong>
+                </div>
+              </div>
+            </div>
+
+            <!-- Fecha -->
+            <div class="row mb-3">
+              <label for="date" class="col-md-3 col-form-label">Fecha</label>
+              <div class="col-md-9">
+                <input type="date" id="date" class="form-control" formControlName="date"
+                       [ngClass]="{'is-invalid': trySend && formControls.date?.errors && formControls.date.enabled && formControls.date.touched}">
+                <div *ngIf="trySend && formControls.date?.errors && formControls.date.enabled && formControls.date.touched" class="invalid-feedback">
+                  <strong *ngIf="formControls.date.errors.required">La fecha es requerida.</strong>
+                </div>
+              </div>
+            </div>
+
+            <hr>
+            <div class="row">
+              <div class="col-md-9 offset-md-3 d-flex justify-content-end"> <!-- Alineación de botones -->
+                <button type="button" class="btn btn-secondary me-2" (click)="back()">
+                  <ng-container *ngIf="mode === 1">Volver</ng-container>
+                  <ng-container *ngIf="mode === 2 || mode === 3">Cancelar</ng-container>
+                </button>
+                <button *ngIf="mode === 2" type="submit" class="btn btn-primary">Crear Mantenimiento</button>
+                <button *ngIf="mode === 3" type="submit" class="btn btn-primary">Actualizar Mantenimiento</button>
+              </div>
+            </div>
+          </div>
+        </form>
+        <div *ngIf="!theFormGroup && mode !==2 " class="card-body"> <!-- Añadido && mode !==2 para que no muestre 'Cargando' en creación si el form se inicializa rápido -->
+            <p class="text-center">Cargando datos del mantenimiento...</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,99 @@
+<div class="header bg-gradient-danger pb-8 pt-5 pt-md-8">
+  <!-- Puedes ajustar el contenido del header si es necesario -->
+</div>
+
+<!-- Page content -->
+<div class="container-fluid mt--7">
+  <!-- Form -->
+  <div class="row">
+    <div class="col">
+      <div class="card shadow">
+        <div class="card-header bg-transparent">
+          <h3 class="mb-0" *ngIf="mode === 1">Detalle de Novedad</h3>
+          <h3 class="mb-0" *ngIf="mode === 2">Crear Nueva Novedad</h3>
+          <h3 class="mb-0" *ngIf="mode === 3">Actualizar Novedad</h3>
+        </div>
+
+        <form class="form" *ngIf="theFormGroup" [formGroup]="theFormGroup" (ngSubmit)="handleSubmit()">
+          <div class="card-body container">
+            <!-- ID Novedad (Solo visualización) -->
+            <div class="row mb-3" *ngIf="(mode === 1 || mode === 3) && currentNewsItem?.id">
+              <div class="col-md-3 col-form-label">ID Novedad</div>
+              <div class="col-md-9">
+                <input type="text" class="form-control-plaintext" [value]="currentNewsItem?.id" readonly>
+              </div>
+            </div>
+
+            <!-- Título -->
+            <div class="row mb-3">
+              <label for="title" class="col-md-3 col-form-label">Título</label>
+              <div class="col-md-9">
+                <input type="text" id="title" class="form-control" formControlName="title"
+                       [ngClass]="{'is-invalid': trySend && formControls.title?.errors}">
+                <div *ngIf="trySend && formControls.title?.errors" class="invalid-feedback">
+                  <strong *ngIf="formControls.title.errors.required">El título es requerido.</strong>
+                  <strong *ngIf="formControls.title.errors.minlength">El título debe tener al menos {{ formControls.title.errors.minlength.requiredLength }} caracteres.</strong>
+                  <strong *ngIf="formControls.title.errors.maxlength">El título no debe exceder los {{ formControls.title.errors.maxlength.requiredLength }} caracteres.</strong>
+                </div>
+              </div>
+            </div>
+
+            <!-- Descripción -->
+            <div class="row mb-3">
+              <label for="description" class="col-md-3 col-form-label">Descripción</label>
+              <div class="col-md-9">
+                <textarea id="description" class="form-control" formControlName="description" rows="3"
+                          [ngClass]="{'is-invalid': trySend && formControls.description?.errors}"></textarea>
+                <div *ngIf="trySend && formControls.description?.errors" class="invalid-feedback">
+                  <strong *ngIf="formControls.description.errors.required">La descripción es requerida.</strong>
+                   <strong *ngIf="formControls.description.errors.maxlength">La descripción no debe exceder los {{ formControls.description.errors.maxlength.requiredLength }} caracteres.</strong>
+                </div>
+              </div>
+            </div>
+
+            <!-- Fecha de Reporte -->
+            <div class="row mb-3">
+              <label for="reported_at" class="col-md-3 col-form-label">Fecha de Reporte</label>
+              <div class="col-md-9">
+                <input type="date" id="reported_at" class="form-control" formControlName="reported_at"
+                       [ngClass]="{'is-invalid': trySend && formControls.reported_at?.errors}">
+                <div *ngIf="trySend && formControls.reported_at?.errors" class="invalid-feedback">
+                  <strong *ngIf="formControls.reported_at.errors.required">La fecha de reporte es requerida.</strong>
+                </div>
+              </div>
+            </div>
+
+            <!-- ID Turno -->
+            <div class="row mb-3">
+              <label for="shift_id" class="col-md-3 col-form-label">Turno (ID)</label>
+              <div class="col-md-9">
+                <input type="number" id="shift_id" class="form-control" formControlName="shift_id"
+                       [ngClass]="{'is-invalid': trySend && formControls.shift_id?.errors}">
+                <div *ngIf="trySend && formControls.shift_id?.errors" class="invalid-feedback">
+                  <strong *ngIf="formControls.shift_id.errors.required">El ID del turno es requerido.</strong>
+                  <strong *ngIf="formControls.shift_id.errors.min">El ID del turno debe ser un número positivo.</strong>
+                </div>
+              </div>
+            </div>
+
+            <hr>
+            <div class="row">
+              <div class="col-md-9 offset-md-3 d-flex justify-content-end">
+                <button type="button" class="btn btn-secondary me-2" (click)="back()">
+                  <ng-container *ngIf="mode === 1">Volver</ng-container>
+                  <ng-container *ngIf="mode === 2 || mode === 3">Cancelar</ng-container>
+                </button>
+                <button *ngIf="mode === 2" type="submit" class="btn btn-primary" [disabled]="theFormGroup.invalid && trySend">Crear</button>
+                <button *ngIf="mode === 3" type="submit" class="btn btn-primary" [disabled]="theFormGroup.invalid && trySend">Actualizar</button>
+              </div>
+            </div>
+          </div>
+        </form>
+        <div *ngIf="!theFormGroup" class="card-body text-center">
+            <p>Cargando formulario...</p>
+            <!-- Podrías añadir un spinner aquí -->
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

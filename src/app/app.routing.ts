@@ -53,6 +53,105 @@ const routes: Routes =[
         loadChildren: () => import('src/app/pages/operators/operators.module').then(m => m.OperatorsModule)
       }
     ]
+  },
+  {
+    path: 'operatorSpecialties',
+    children: [
+      {
+        path: '',
+        loadChildren: () => import('src/app/pages/operator_specialties/operator-specialties.module').then(m => m.OperatorSpecialtiesModule)
+      }
+    ]
+  },
+  {
+    path: 'insurances',
+    children: [
+      {
+        path: '',
+        loadChildren: () => import('src/app/pages/insurances/insurances.module').then(m => m.insurancesModule)
+      }
+    ]
+  },
+  {
+    path: 'operatorPolicies',
+    children: [
+      {
+        path: '',
+        loadChildren: () => import('src/app/pages/operator-policies/operator-policies.module').then(m => m.OperatorPoliciesModule)
+      }
+    ]
+  },
+  {
+    path: 'machines',
+    children: [
+      {
+        path: '',
+        loadChildren: () => import('src/app/pages/machines/machines.module').then(m => m.MachinesModule)
+      }
+    ]
+  },
+  {
+    path: 'machinePolicies',
+    children: [
+      {
+        path: '',
+        loadChildren: () => import('src/app/pages/machine-policies/machine-policies.module').then(m => m.MachinePoliciesModule)
+      }
+    ]
+  },
+  {
+    path: 'serviceTypes',
+    children: [
+      {
+        path: '',
+        loadChildren: () => import('src/app/pages/service-types/service-types.module').then(m => m.ServiceTypesModule)
+      }
+    ]
+  },
+  {
+    path: 'specialtyTypes',
+    children: [
+      {
+        path: '',
+        loadChildren: () => import('src/app/pages/specialty-types/specialty-types.module').then(m => m.SpecialtyTypesModule)
+      }
+    ]
+  },
+  {
+    path: 'shifts',
+    children: [
+      {
+        path: '',
+        loadChildren: () => import('src/app/pages/shifts/shifts.module').then(m => m.ShiftsModule)
+      }
+    ]
+  },
+  {
+    path: 'news',
+    children: [
+      {
+        path: '',
+        loadChildren: () => import('src/app/pages/news/news.module').then(m => m.NewsModule)
+      }
+    ]
+  },
+  {
+    path: 'maintenances',
+    children: [
+      {
+        path: '',
+        loadChildren: () => import('src/app/pages/maintenances/maintenances.module').then(m => m.MaintenancesModule)
+      }
+    ]
+  },
+  {
+    path: 'procedures',
+    children: [
+      {
+        path: '',
+        loadChildren: () => import('src/app/pages/procedures/procedures.module').then(m => m.ProceduresModule)
+      }
+    ]
   }
 ];
 

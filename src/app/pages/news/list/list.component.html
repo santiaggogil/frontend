@@ -1,0 +1,51 @@
+<div class="header bg-gradient-danger pb-8 pt-5 pt-md-8">
+  <!-- Puedes ajustar el contenido del header si es necesario -->
+</div>
+
+<div class="container-fluid mt--7">
+  <div class="row">
+    <div class="col">
+      <div class="card shadow">
+        <div class="card-header bg-transparent">
+          <h3 class="mb-0">Listado de Novedades</h3>
+        </div>
+        <div class="card-body">
+          <div class="table-responsive">
+            <table class="table">
+              <thead>
+                <tr>
+                  <th scope="col">ID</th>
+                  <th scope="col">Título</th>
+                  <th scope="col">Descripción</th>
+                  <th scope="col">Fecha Reporte</th>
+                  <th scope="col">ID Turno</th>
+                  <th scope="col">Opciones</th>
+                  <th scope="col" class="text-left">
+                    <button class="btn btn-success" (click)="create()">Crear Novedad</button>
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let newsItem of newsList">
+                  <td>{{ newsItem.id }}</td>
+                  <td>{{ newsItem.title }}</td>
+                  <td>{{ newsItem.description }}</td>
+                  <td>{{ newsItem.reported_at | date:'yyyy-MM-dd' }}</td>
+                  <td>{{ newsItem.shift_id }}</td>
+                  <td>
+                    <button class="btn btn-primary btn-sm" (click)="edit(newsItem.id!)">Editar</button>
+                    <button class="btn btn-info btn-sm" (click)="view(newsItem.id!)">Ver</button>
+                    <button class="btn btn-danger btn-sm" (click)="delete(newsItem.id!)">Eliminar</button>
+                  </td>
+                </tr>
+                <tr *ngIf="!newsList || newsList.length === 0">
+                    <td colspan="7" class="text-center">No hay novedades para mostrar.</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

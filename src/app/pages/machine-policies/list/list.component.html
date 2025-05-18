@@ -1,0 +1,49 @@
+<div class="header bg-gradient-danger pb-8 pt-5 pt-md-8">
+</div>
+
+<div class="container-fluid mt--7">
+  <div class="row">
+    <div class="col">
+      <div class="card shadow">
+        <div class="card-header bg-transparent">
+          <h3 class="mb-0">Pólizas de Máquinas</h3> <!-- CAMBIO: Texto -->
+        </div>
+        <div class="card-body">
+          <div class="table-responsive">
+            <table class="table">
+                <tr>
+                  <th scope="col">ID</th>
+                  <th scope="col">Máquina ID</th> <!-- CAMBIO: Texto -->
+                  <th scope="col">Aseguradora ID</th>
+                  <th scope="col">Valor Asegurado</th>
+                  <th scope="col">Válido Desde</th>
+                  <th scope="col">Válido Hasta</th>
+                  <th scope="col">Opciones</th>
+                  <th scope="col" class="text-left">
+                    <button class="btn btn-success" (click)="create()">Crear</button>
+                  </th>
+                </tr>
+
+                <tr *ngFor="let machinePolicy of machine_policies"> <!-- CAMBIO: Variable y colección -->
+                  <td>{{ machinePolicy.id }}</td>
+                  <td>{{ machinePolicy.machine_id }}</td> <!-- CAMBIO: Propiedad del modelo -->
+                  <td>{{ machinePolicy.insurance_id }}</td>
+                  <td>{{ machinePolicy.insured_value | currency:'USD':'symbol':'1.2-2' }}</td>
+                  <td>{{ machinePolicy.valid_from | date:'yyyy-MM-dd HH:mm:ss' }}</td>
+                  <td>{{ machinePolicy.valid_to | date:'yyyy-MM-dd HH:mm:ss' }}</td>
+                  <td>
+                    <button class="btn btn-primary" (click)="edit(machinePolicy.id!)">Editar</button>
+                    <button class="btn btn-primary" (click)="view(machinePolicy.id!)">Ver</button> <!-- Mantenido btn-info para consistencia -->
+                    <button class="btn btn-danger" (click)="delete(machinePolicy.id!)">Eliminar</button>
+                  </td>
+                </tr>
+                <tr *ngIf="!machine_policies || machine_policies.length === 0"> <!-- CAMBIO: Variable -->
+                    <td colspan="8" class="text-center">No hay pólizas de máquinas registradas.</td> <!-- CAMBIO: Texto -->
+                </tr>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

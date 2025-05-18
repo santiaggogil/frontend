@@ -1,0 +1,96 @@
+<div class="header bg-gradient-danger pb-8 pt-5 pt-md-8">
+</div>
+
+<!-- Page content -->
+<div class="container-fluid mt--7">
+  <!-- Form -->
+  <div class="row">
+    <div class="col">
+      <div class="card shadow">
+        <div class="card-header bg-transparent">
+          <h3 class="mb-0" *ngIf="mode === 1">Detalle de Especialidad</h3>
+          <h3 class="mb-0" *ngIf="mode === 2">Crear Nueva Especialidad</h3>
+          <h3 class="mb-0" *ngIf="mode === 3">Actualizar Especialidad</h3>
+        </div>
+
+        <form class="form" *ngIf="theFormGroup" [formGroup]="theFormGroup" (ngSubmit)="mode === 2 ? create() : (mode === 3 ? update() : null)">
+          <div class="card-body container">
+            <!-- ID Especialidad (Solo visualización) -->
+            <div class="row mb-3" *ngIf="(mode === 1 || mode === 3) && specialtyType?.id">
+              <div class="col-md-3 col-form-label">ID Especialidad</div>
+              <div class="col-md-9">
+                <input type="text" class="form-control-plaintext" [value]="specialtyType?.id" readonly>
+              </div>
+            </div>
+
+            <!-- Nombre -->
+            <div class="row mb-3">
+              <label for="name" class="col-md-3 col-form-label">Nombre</label>
+              <div class="col-md-9">
+                <input type="text" id="name" class="form-control" formControlName="name"
+                       [ngClass]="{'is-invalid': trySend && formControls.name?.errors && formControls.name.enabled}">
+                <div *ngIf="trySend && formControls.name?.errors && formControls.name.enabled" class="invalid-feedback">
+                  <strong *ngIf="formControls.name.errors.required">El nombre es requerido.</strong>
+                  <strong *ngIf="formControls.name.errors.maxlength">El nombre no puede exceder los {{ formControls.name.errors.maxlength.requiredLength }} caracteres.</strong>
+                </div>
+              </div>
+            </div>
+
+            <!-- Descripción -->
+            <div class="row mb-3">
+              <label for="description" class="col-md-3 col-form-label">Descripción</label>
+              <div class="col-md-9">
+                <textarea id="description" class="form-control" formControlName="description" rows="3"
+                       [ngClass]="{'is-invalid': trySend && formControls.description?.errors && formControls.description.enabled}"></textarea>
+                <div *ngIf="trySend && formControls.description?.errors && formControls.description.enabled" class="invalid-feedback">
+                    <strong *ngIf="formControls.description.errors.maxlength">La descripción no puede exceder los {{ formControls.description.errors.maxlength.requiredLength }} caracteres.</strong>
+                </div>
+              </div>
+            </div>
+
+            <!-- ID Máquina -->
+            <div class="row mb-3">
+              <label for="machine_id" class="col-md-3 col-form-label">ID Máquina</label>
+              <div class="col-md-9">
+                <input type="number" id="machine_id" class="form-control" formControlName="machine_id"
+                       [ngClass]="{'is-invalid': trySend && formControls.machine_id?.errors && formControls.machine_id.enabled}">
+                <div *ngIf="trySend && formControls.machine_id?.errors && formControls.machine_id.enabled" class="invalid-feedback">
+                  <strong *ngIf="formControls.machine_id.errors.required">El ID de máquina es requerido.</strong>
+                  <strong *ngIf="formControls.machine_id.errors.pattern">El ID de máquina debe ser un número.</strong>
+                </div>
+              </div>
+            </div>
+
+            <!-- ID Tipo de Servicio -->
+            <div class="row mb-3">
+              <label for="service_type_id" class="col-md-3 col-form-label">ID Tipo de Servicio</label>
+              <div class="col-md-9">
+                <input type="number" id="service_type_id" class="form-control" formControlName="service_type_id"
+                       [ngClass]="{'is-invalid': trySend && formControls.service_type_id?.errors && formControls.service_type_id.enabled}">
+                <div *ngIf="trySend && formControls.service_type_id?.errors && formControls.service_type_id.enabled" class="invalid-feedback">
+                  <strong *ngIf="formControls.service_type_id.errors.required">El ID de tipo de servicio es requerido.</strong>
+                  <strong *ngIf="formControls.service_type_id.errors.pattern">El ID de tipo de servicio debe ser un número.</strong>
+                </div>
+              </div>
+            </div>
+
+            <hr>
+            <div class="row">
+              <div class="col-md-9 offset-md-3">
+                <button type="button" class="btn btn-secondary me-2" (click)="back()">
+                  <ng-container *ngIf="mode === 1">Volver</ng-container>
+                  <ng-container *ngIf="mode === 2 || mode === 3">Cancelar</ng-container>
+                </button>
+                <button *ngIf="mode === 2" type="submit" class="btn btn-primary" [disabled]="theFormGroup.invalid && trySend">Crear Especialidad</button>
+                <button *ngIf="mode === 3" type="submit" class="btn btn-primary" [disabled]="theFormGroup.invalid && trySend">Actualizar Especialidad</button>
+              </div>
+            </div>
+          </div>
+        </form>
+        <div *ngIf="!theFormGroup" class="card-body">
+            <p>Cargando formulario...</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

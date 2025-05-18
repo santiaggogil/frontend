@@ -1,0 +1,47 @@
+<div class="header bg-gradient-danger pb-8 pt-5 pt-md-8">
+</div>
+
+<div class="container-fluid mt--7">
+  <div class="row">
+    <div class="col">
+      <div class="card shadow">
+        <div class="card-header bg-transparent">
+          <h3 class="mb-0">Turnos</h3> <!-- CAMBIO: Texto -->
+        </div>
+        <div class="card-body">
+          <div class="table-responsive">
+            <table class="table">
+                <tr>
+                  <th scope="col">ID</th>
+                  <th scope="col">Hora de Inicio</th> <!-- CAMBIO: Texto y propiedad -->
+                  <th scope="col">Hora de Fin</th>   <!-- CAMBIO: Texto y propiedad -->
+                  <th scope="col">Máquina ID</th>     <!-- CAMBIO: Texto y propiedad -->
+                  <th scope="col">Operador ID</th>    <!-- CAMBIO: Texto y propiedad -->
+                  <th scope="col">Opciones</th>
+                  <th scope="col" class="text-left">
+                    <button class="btn btn-success" (click)="create()">Crear</button>
+                  </th>
+                </tr>
+
+                <tr *ngFor="let shift of shifts"> <!-- CAMBIO: Variable y colección -->
+                  <td>{{ shift.id }}</td>
+                  <td>{{ shift.start_time }}</td>        <!-- CAMBIO: Propiedad del modelo -->
+                  <td>{{ shift.end_time }}</td>          <!-- CAMBIO: Propiedad del modelo -->
+                  <td>{{ shift.machine_id }}</td>        <!-- CAMBIO: Propiedad del modelo -->
+                  <td>{{ shift.operator_id }}</td>       <!-- CAMBIO: Propiedad del modelo -->
+                  <td>
+                    <button class="btn btn-primary" (click)="edit(shift.id!)">Editar</button>
+                    <button class="btn btn-info" (click)="view(shift.id!)">Ver</button> <!-- Mantenido btn-info (puede ser primary también) -->
+                    <button class="btn btn-danger" (click)="delete(shift.id!)">Eliminar</button>
+                  </td>
+                </tr>
+                <tr *ngIf="!shifts || shifts.length === 0"> <!-- CAMBIO: Variable -->
+                    <td colspan="7" class="text-center">No hay turnos registrados.</td> <!-- CAMBIO: Texto y colspan -->
+                </tr>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

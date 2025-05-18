@@ -1,0 +1,39 @@
+<div class="header bg-gradient-danger pb-8 pt-5 pt-md-8">
+</div>
+<!-- Page content -->
+<div class="container-fluid mt--7">
+  <!-- Table -->
+  <div class="row">
+    <div class="col">
+      <div class="card shadow">
+        <div class="card-header bg-transparent">
+          <h3 class="mb-0">Seguros</h3>
+        </div>
+        <div class="card-body">
+          <div class="table-responsive">
+            <table class="table">
+              <tr>
+                <th scope="col">ID</th>
+                <th scope="col">Tipo</th>
+                <th scope="col">Compañia</th>
+                <th scope="col">Opciones</th>
+                <th scope="col" class="text-left" > <!-- Celda para el botón Crear, alineado a la derecha -->
+                  <button class="btn btn-success" (click)="create()">Crear</button>
+                </th>
+              </tr>
+              <tr *ngFor="let insurance of insurances">
+                <td>{{ insurance.id }}</td>
+                <td>{{ insurance.type }}</td>
+                <td>{{ insurance.company }}</td>
+                <td>
+                  <button class="btn btn-primary" (click)="edit(insurance.id)">Editar</button>
+                  <button class="btn btn-primary" (click)="view(insurance.id)">Ver</button>
+                  <button class="btn btn-danger" (click)="delete(insurance.id)">Eliminar</button>
+                </td>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,43 @@
+<div class="header bg-gradient-danger pb-8 pt-5 pt-md-8">
+</div>
+
+<div class="container-fluid mt--7">
+  <div class="row">
+    <div class="col">
+      <div class="card shadow">
+        <div class="card-header bg-transparent">
+          <h3 class="mb-0">Especialidades de operarios</h3>
+        </div>
+        <div class="card-body">
+          <div class="table-responsive">
+            <table class="table">
+              <tr>
+                <th scope="col">ID</th>
+                <th scope="col">Operario ID</th>
+                <th scope="col">Especialidad ID</th>
+                <th scope="col">Fecha Inicio</th>
+                <th scope="col">Fecha Fin</th>
+                <th scope="col">Opciones</th>
+                <th scope="col" class="text-left">
+                  <button class="btn btn-success" (click)="create()">Crear</button>
+                </th>
+              </tr>
+              <tr *ngFor="let opSpecialty of operator_specialties">
+                <td>{{ opSpecialty.id }}</td>
+                <td>{{ opSpecialty.operator_id }}</td>
+                <td>{{ opSpecialty.specialty_id }}</td>
+                <td>{{ opSpecialty.start_date | date:'yyyy-MM-dd' }}</td>
+                <td>{{ opSpecialty.end_date | date:'yyyy-MM-dd' }}</td>
+                <td>
+                  <button class="btn btn-primary" (click)="edit(opSpecialty.id)">Editar</button>
+                  <button class="btn btn-primary" (click)="view(opSpecialty.id)">Ver</button>
+                  <button class="btn btn-danger" (click)="delete(opSpecialty.id)">Eliminar</button>
+                </td>
+              </tr>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

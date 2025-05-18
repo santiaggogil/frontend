@@ -1,0 +1,46 @@
+<div class="header bg-gradient-danger pb-8 pt-5 pt-md-8">
+</div>
+
+<div class="container-fluid mt--7">
+  <div class="row">
+    <div class="col">
+      <div class="card shadow">
+        <div class="card-header bg-transparent">
+          <h3 class="mb-0">Procedimientos</h3>
+        </div>
+        <div class="card-body">
+          <div class="table-responsive">
+            <table class="table">
+                <thead>
+                  <tr>
+                    <th scope="col">ID</th>
+                    <th scope="col">Nombre</th>
+                    <th scope="col">Descripción</th>
+                    <th scope="col">Opciones</th>
+                    <th scope="col" class="text-left">
+                      <button class="btn btn-success" (click)="create()">Crear</button>
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let procedure of procedures">
+                    <td>{{ procedure.id }}</td>
+                    <td>{{ procedure.name }}</td>
+                    <td>{{ procedure.description }}</td>
+                    <td>
+                      <button class="btn btn-primary" (click)="edit(procedure.id!)">Editar</button>
+                      <button class="btn btn-primary" (click)="view(procedure.id!)">Ver</button>
+                      <button class="btn btn-danger" (click)="delete(procedure.id!)">Eliminar</button>
+                    </td>
+                  </tr>
+                  <tr *ngIf="!procedures || procedures.length === 0">
+                      <td colspan="5" class="text-center">No hay procedimientos registrados.</td>
+                  </tr>
+                </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

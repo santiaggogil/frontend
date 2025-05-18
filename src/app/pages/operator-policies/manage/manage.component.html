@@ -1,0 +1,111 @@
+<div class="header bg-gradient-danger pb-8 pt-5 pt-md-8">
+</div>
+
+<!-- Page content -->
+<div class="container-fluid mt--7">
+  <!-- Form -->
+  <div class="row">
+    <div class="col">
+      <div class="card shadow">
+        <div class="card-header bg-transparent">
+          <h3 class="mb-0" *ngIf="mode === 1">Detalle de Póliza de Operario</h3>
+          <h3 class="mb-0" *ngIf="mode === 2">Crear Nueva Póliza de Operario</h3>
+          <h3 class="mb-0" *ngIf="mode === 3">Actualizar Póliza de Operario</h3>
+        </div>
+
+        <form class="form" *ngIf="theFormGroup" [formGroup]="theFormGroup" (ngSubmit)="mode === 2 ? create() : (mode === 3 ? update() : null)">
+          <div class="card-body container">
+            <!-- ID Póliza (Solo visualización) -->
+            <div class="row mb-3" *ngIf="(mode === 1 || mode === 3) && operatorPolicy?.id">
+              <div class="col-md-3 col-form-label">ID Póliza</div>
+              <div class="col-md-9">
+                <input type="text" class="form-control-plaintext" [value]="operatorPolicy?.id" readonly>
+              </div>
+            </div>
+
+            <!-- ID Operador -->
+            <div class="row mb-3">
+              <label for="operator_id" class="col-md-3 col-form-label">Operario (ID)</label>
+              <div class="col-md-9">
+                <input type="number" id="operator_id" class="form-control" formControlName="operator_id"
+                       [ngClass]="{'is-invalid': trySend && formControls.operator_id?.errors && formControls.operator_id.enabled}">
+                <div *ngIf="trySend && formControls.operator_id?.errors && formControls.operator_id.enabled" class="invalid-feedback">
+                  <strong *ngIf="formControls.operator_id.errors.required">El ID del operario es requerido.</strong>
+                  <strong *ngIf="formControls.operator_id.errors.min">El ID del operario debe ser un número positivo.</strong>
+                </div>
+              </div>
+            </div>
+
+            <!-- ID Aseguradora -->
+            <div class="row mb-3">
+              <label for="insurance_id" class="col-md-3 col-form-label">Aseguradora (ID)</label>
+              <div class="col-md-9">
+                <input type="number" id="insurance_id" class="form-control" formControlName="insurance_id"
+                       [ngClass]="{'is-invalid': trySend && formControls.insurance_id?.errors && formControls.insurance_id.enabled}">
+                <div *ngIf="trySend && formControls.insurance_id?.errors && formControls.insurance_id.enabled" class="invalid-feedback">
+                  <strong *ngIf="formControls.insurance_id.errors.required">El ID de la aseguradora es requerido.</strong>
+                  <strong *ngIf="formControls.insurance_id.errors.min">El ID de la aseguradora debe ser un número positivo.</strong>
+                </div>
+              </div>
+            </div>
+
+            <!-- Valor Asegurado -->
+            <div class="row mb-3">
+              <label for="insured_value" class="col-md-3 col-form-label">Valor Asegurado</label>
+              <div class="col-md-9">
+                <input type="number" id="insured_value" class="form-control" formControlName="insured_value"
+                       [ngClass]="{'is-invalid': trySend && formControls.insured_value?.errors}">
+                <div *ngIf="trySend && formControls.insured_value?.errors" class="invalid-feedback">
+                  <strong *ngIf="formControls.insured_value.errors.required">El valor asegurado es requerido.</strong>
+                  <strong *ngIf="formControls.insured_value.errors.min">El valor asegurado no puede ser negativo.</strong>
+                </div>
+              </div>
+            </div>
+
+            <!-- Válido Desde -->
+            <div class="row mb-3">
+              <label for="valid_from" class="col-md-3 col-form-label">Válido Desde</label>
+              <div class="col-md-9">
+                <input type="date" id="valid_from" class="form-control" formControlName="valid_from"
+                       [ngClass]="{'is-invalid': trySend && formControls.valid_from?.errors}">
+                <div *ngIf="trySend && formControls.valid_from?.errors" class="invalid-feedback">
+                  <strong *ngIf="formControls.valid_from.errors.required">La fecha "válido desde" es requerida.</strong>
+                </div>
+              </div>
+            </div>
+
+            <!-- Válido Hasta -->
+            <div class="row mb-3">
+              <label for="valid_to" class="col-md-3 col-form-label">Válido Hasta</label>
+              <div class="col-md-9">
+                <input type="date" id="valid_to" class="form-control" formControlName="valid_to"
+                       [ngClass]="{'is-invalid': trySend && (formControls.valid_to?.errors || theFormGroup.errors?.dateRangeInvalid)}">
+                <div *ngIf="trySend && formControls.valid_to?.errors" class="invalid-feedback">
+                  <strong *ngIf="formControls.valid_to.errors.required">La fecha "válido hasta" es requerida.</strong>
+                </div>
+                <div *ngIf="trySend && theFormGroup.errors?.dateRangeInvalid && (formControls.valid_from.touched || formControls.valid_to.touched)" class="invalid-feedback d-block">
+                  La fecha "válido hasta" no puede ser anterior a la fecha "válido desde".
+                </div>
+              </div>
+            </div>
+
+            <hr>
+            <div class="row">
+              <div class="col-md-9 offset-md-3">
+                <button type="button" class="btn btn-secondary me-2" (click)="back()">
+                  <ng-container *ngIf="mode === 1">Volver</ng-container>
+                  <ng-container *ngIf="mode === 2 || mode === 3">Cancelar</ng-container>
+                </button>
+                <button *ngIf="mode === 2" type="submit" class="btn btn-primary" [disabled]="theFormGroup.invalid && trySend">Crear Póliza</button>
+                <button *ngIf="mode === 3" type="submit" class="btn btn-primary" [disabled]="theFormGroup.invalid && trySend">Actualizar Póliza</button>
+              </div>
+            </div>
+          </div>
+        </form>
+        <div *ngIf="!theFormGroup" class="card-body">
+            <p>Cargando formulario...</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

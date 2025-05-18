@@ -1,0 +1,106 @@
+<div class="header bg-gradient-danger pb-8 pt-5 pt-md-8">
+</div>
+
+<!-- Page content -->
+<div class="container-fluid mt--7">
+  <!-- Form -->
+  <div class="row">
+    <div class="col">
+      <div class="card shadow">
+        <div class="card-header bg-transparent">
+          <!-- Títulos adaptados para Machine -->
+          <h3 class="mb-0" *ngIf="mode === 1">Detalle de Máquina</h3>
+          <h3 class="mb-0" *ngIf="mode === 2">Crear Nueva Máquina</h3>
+          <h3 class="mb-0" *ngIf="mode === 3">Actualizar Máquina</h3>
+        </div>
+
+        <form class="form" *ngIf="theFormGroup" [formGroup]="theFormGroup" (ngSubmit)="mode === 2 ? create() : (mode === 3 ? update() : null)">
+          <div class="card-body container">
+            <!-- ID Máquina (Solo visualización) -->
+            <div class="row mb-3" *ngIf="(mode === 1 || mode === 3) && machine?.id">
+              <div class="col-md-3 col-form-label">ID Máquina</div>
+              <div class="col-md-9">
+                <input type="text" class="form-control-plaintext" [value]="machine?.id" readonly>
+              </div>
+            </div>
+
+            <!-- Nombre de la Máquina -->
+            <div class="row mb-3">
+              <label for="name" class="col-md-3 col-form-label">Nombre</label>
+              <div class="col-md-9">
+                <input type="text" id="name" class="form-control" formControlName="name"
+                       [ngClass]="{'is-invalid': trySend && formControls.name?.errors}">
+                <div *ngIf="trySend && formControls.name?.errors" class="invalid-feedback">
+                  <strong *ngIf="formControls.name.errors.required">El nombre es requerido.</strong>
+                  <strong *ngIf="formControls.name.errors.maxlength">
+                    El nombre no debe exceder los {{ formControls.name.errors.maxlength.requiredLength }} caracteres.
+                  </strong>
+                </div>
+              </div>
+            </div>
+
+            <!-- Modelo de la Máquina -->
+            <div class="row mb-3">
+              <label for="model" class="col-md-3 col-form-label">Modelo</label>
+              <div class="col-md-9">
+                <input type="text" id="model" class="form-control" formControlName="model"
+                       [ngClass]="{'is-invalid': trySend && formControls.model?.errors}">
+                <div *ngIf="trySend && formControls.model?.errors" class="invalid-feedback">
+                  <strong *ngIf="formControls.model.errors.required">El modelo es requerido.</strong>
+                  <strong *ngIf="formControls.model.errors.maxlength">
+                    El modelo no debe exceder los {{ formControls.model.errors.maxlength.requiredLength }} caracteres.
+                  </strong>
+                </div>
+              </div>
+            </div>
+
+            <!-- Marca de la Máquina -->
+            <div class="row mb-3">
+              <label for="brand" class="col-md-3 col-form-label">Marca</label>
+              <div class="col-md-9">
+                <input type="text" id="brand" class="form-control" formControlName="brand"
+                       [ngClass]="{'is-invalid': trySend && formControls.brand?.errors}">
+                <div *ngIf="trySend && formControls.brand?.errors" class="invalid-feedback">
+                  <strong *ngIf="formControls.brand.errors.required">La marca es requerida.</strong>
+                  <strong *ngIf="formControls.brand.errors.maxlength">
+                    La marca no debe exceder los {{ formControls.brand.errors.maxlength.requiredLength }} caracteres.
+                  </strong>
+                </div>
+              </div>
+            </div>
+
+            <!-- Año de la Máquina -->
+            <div class="row mb-3">
+              <label for="year" class="col-md-3 col-form-label">Año</label>
+              <div class="col-md-9">
+                <input type="number" id="year" class="form-control" formControlName="year"
+                       [ngClass]="{'is-invalid': trySend && formControls.year?.errors}">
+                <div *ngIf="trySend && formControls.year?.errors" class="invalid-feedback">
+                  <strong *ngIf="formControls.year.errors.required">El año es requerido.</strong>
+                  <strong *ngIf="formControls.year.errors.min">El año debe ser un número positivo (ej: mayor a {{ formControls.year.errors.min.min -1 }}).</strong>
+                  <strong *ngIf="formControls.year.errors.max">El año no puede ser mayor a {{ formControls.year.errors.max.max }}.</strong>
+                  <strong *ngIf="formControls.year.errors.pattern">El año debe tener 4 dígitos.</strong>
+                </div>
+              </div>
+            </div>
+
+            <hr>
+            <div class="row">
+              <div class="col-md-9 offset-md-3">
+                <button type="button" class="btn btn-secondary me-2" (click)="back()">
+                  <ng-container *ngIf="mode === 1">Volver</ng-container>
+                  <ng-container *ngIf="mode === 2 || mode === 3">Cancelar</ng-container>
+                </button>
+                <button *ngIf="mode === 2" type="submit" class="btn btn-primary" [disabled]="theFormGroup.invalid && trySend">Crear Máquina</button>
+                <button *ngIf="mode === 3" type="submit" class="btn btn-primary" [disabled]="theFormGroup.invalid && trySend">Actualizar Máquina</button>
+              </div>
+            </div>
+          </div>
+        </form>
+        <div *ngIf="!theFormGroup" class="card-body">
+            <p>Cargando formulario...</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,52 @@
+<div class="header bg-gradient-danger pb-8 pt-5 pt-md-8">
+</div>
+<!-- Page content -->
+<div class="container-fluid mt--7">
+  <!-- Table -->
+  <div class="row">
+    <div class="col">
+      <div class="card shadow">
+        <div class="card-header bg-transparent">
+          <h3 class="mb-0">Máquinas</h3> <!-- Título cambiado -->
+        </div>
+        <div class="card-body">
+          <div class="table-responsive">
+            <table class="table align-items-center table-flush"> <!-- Clases de Argon añadidas -->
+              <thead class="thead-light"> <!-- Encabezado de tabla con estilo Argon -->
+                <tr>
+                  <th scope="col">ID</th>
+                  <th scope="col">Nombre</th> <!-- Campo del modelo Machine -->
+                  <th scope="col">Modelo</th> <!-- Campo del modelo Machine -->
+                  <th scope="col">Marca</th>  <!-- Campo del modelo Machine -->
+                  <th scope="col">Año</th>   <!-- Campo del modelo Machine -->
+                  <th scope="col">Opciones</th>
+                  <th scope="col" class="text-right"> <!-- Alineado a la derecha -->
+                    <button class="btn btn-success" (click)="create()">Crear Máquina</button> <!-- Texto del botón cambiado y btn-sm -->
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let machine of machines">
+                  <td>{{ machine.id }}</td>
+                  <td>{{ machine.name }}</td>
+                  <td>{{ machine.model }}</td>
+                  <td>{{ machine.brand }}</td>
+                  <td>{{ machine.year }}</td>
+                  <td>
+                    <button class="btn btn-primary" (click)="edit(machine.id!)">Editar</button> <!-- btn-sm y non-null assertion -->
+                    <button class="btn btn-primary" (click)="view(machine.id!)">Ver</button>    <!-- btn-sm, btn-info y non-null assertion -->
+                    <button class="btn btn-danger" (click)="delete(machine.id!)">Eliminar</button> <!-- btn-sm y non-null assertion -->
+                  </td>
+                  <td></td> <!-- Celda vacía para alinear con la columna del botón "Crear" -->
+                </tr>
+                <tr *ngIf="!machines || machines.length === 0"> <!-- Mensaje si no hay datos -->
+                    <td colspan="7" class="text-center">No hay máquinas registradas.</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

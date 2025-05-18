@@ -1,0 +1,98 @@
+<div class="header bg-gradient-danger pb-8 pt-5 pt-md-8">
+</div>
+
+<!-- Page content -->
+<div class="container-fluid mt--7">
+  <!-- Form -->
+  <div class="row">
+    <div class="col">
+      <div class="card shadow">
+        <div class="card-header bg-transparent">
+          <!-- Títulos adaptados para OperatorSpecialties -->
+          <h3 class="mb-0" *ngIf="mode === 1">Detalle de Especialidad Asignada</h3>
+          <h3 class="mb-0" *ngIf="mode === 2">Asignar Nueva Especialidad a Operario</h3>
+          <h3 class="mb-0" *ngIf="mode === 3">Actualizar Asignación de Especialidad</h3>
+        </div>
+
+        <form class="form" *ngIf="theFormGroup" [formGroup]="theFormGroup" (ngSubmit)="mode === 2 ? create() : (mode === 3 ? update() : null)">
+          <div class="card-body container">
+            <!-- ID Asignación (Solo visualización) -->
+            <div class="row mb-3" *ngIf="(mode === 1 || mode === 3) && operatorSpecialty?.id">
+              <div class="col-md-3 col-form-label">ID Asignación</div>
+              <div class="col-md-9">
+                <input type="text" class="form-control-plaintext" [value]="operatorSpecialty?.id" readonly>
+              </div>
+            </div>
+
+            <!-- ID Operador -->
+            <div class="row mb-3">
+              <label for="operator_id" class="col-md-3 col-form-label">Operario (ID)</label>
+              <div class="col-md-9">
+                <input type="number" id="operator_id" class="form-control" formControlName="operator_id"
+                       [ngClass]="{'is-invalid': trySend && formControls.operator_id?.errors && formControls.operator_id.enabled}">
+                <div *ngIf="trySend && formControls.operator_id?.errors && formControls.operator_id.enabled" class="invalid-feedback">
+                  <strong *ngIf="formControls.operator_id.errors.required">El ID del operario es requerido.</strong>
+                  <strong *ngIf="formControls.operator_id.errors.min">El ID del operario debe ser un número positivo.</strong>
+                </div>
+              </div>
+            </div>
+
+            <!-- ID Especialidad -->
+            <div class="row mb-3">
+              <label for="specialty_id" class="col-md-3 col-form-label">Especialidad (ID)</label>
+              <div class="col-md-9">
+                <input type="number" id="specialty_id" class="form-control" formControlName="specialty_id"
+                       [ngClass]="{'is-invalid': trySend && formControls.specialty_id?.errors && formControls.specialty_id.enabled}">
+                <div *ngIf="trySend && formControls.specialty_id?.errors && formControls.specialty_id.enabled" class="invalid-feedback">
+                  <strong *ngIf="formControls.specialty_id.errors.required">El ID de la especialidad es requerido.</strong>
+                  <strong *ngIf="formControls.specialty_id.errors.min">El ID de la especialidad debe ser un número positivo.</strong>
+                </div>
+              </div>
+            </div>
+
+            <!-- Fecha de Inicio -->
+            <div class="row mb-3">
+              <label for="start_date" class="col-md-3 col-form-label">Fecha de Inicio</label>
+              <div class="col-md-9">
+                <input type="date" id="start_date" class="form-control" formControlName="start_date"
+                       [ngClass]="{'is-invalid': trySend && formControls.start_date?.errors}">
+                <div *ngIf="trySend && formControls.start_date?.errors" class="invalid-feedback">
+                  <strong *ngIf="formControls.start_date.errors.required">La fecha de inicio es requerida.</strong>
+                </div>
+              </div>
+            </div>
+
+            <!-- Fecha de Fin -->
+            <div class="row mb-3">
+              <label for="end_date" class="col-md-3 col-form-label">Fecha de Fin</label>
+              <div class="col-md-9">
+                <input type="date" id="end_date" class="form-control" formControlName="end_date"
+                       [ngClass]="{'is-invalid': trySend && formControls.end_date?.errors}">
+                <div *ngIf="trySend && formControls.end_date?.errors" class="invalid-feedback">
+                  <strong *ngIf="formControls.end_date.errors.required">La fecha de fin es requerida.</strong>
+                  <!-- Podrías añadir un validador personalizado para que end_date sea posterior a start_date -->
+                  <strong *ngIf="theFormGroup.errors?.dateRangeInvalid && (formControls.start_date.touched || formControls.end_date.touched)">La fecha de fin no puede ser anterior a la fecha de inicio.</strong>
+                </div>
+              </div>
+            </div>
+
+            <hr>
+            <div class="row">
+              <div class="col-md-9 offset-md-3">
+                <button type="button" class="btn btn-secondary me-2" (click)="back()">
+                  <ng-container *ngIf="mode === 1">Volver</ng-container>
+                  <ng-container *ngIf="mode === 2 || mode === 3">Cancelar</ng-container>
+                </button>
+                <button *ngIf="mode === 2" type="submit" class="btn btn-primary" [disabled]="theFormGroup.invalid && trySend">Crear</button>
+                <button *ngIf="mode === 3" type="submit" class="btn btn-primary" [disabled]="theFormGroup.invalid && trySend">Actualizar</button>
+              </div>
+            </div>
+          </div>
+        </form>
+        <div *ngIf="!theFormGroup" class="card-body">
+            <p>Cargando formulario...</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

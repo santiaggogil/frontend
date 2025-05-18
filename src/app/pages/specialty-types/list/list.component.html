@@ -1,0 +1,50 @@
+<div class="header bg-gradient-danger pb-8 pt-5 pt-md-8">
+</div>
+
+<div class="container-fluid mt--7">
+  <div class="row">
+    <div class="col">
+      <div class="card shadow">
+        <div class="card-header bg-transparent">
+          <h3 class="mb-0">Especialidades</h3>
+        </div>
+        <div class="card-body">
+          <div class="table-responsive">
+            <table class="table align-items-center table-flush">
+                <thead class="thead-light">
+                    <tr>
+                      <th scope="col">ID</th>
+                      <th scope="col">Nombre</th>
+                      <th scope="col">Descripción</th>
+                      <th scope="col">ID Máquina</th>
+                      <th scope="col">ID Tipo Servicio</th>
+                      <th scope="col">Opciones</th>
+                      <th scope="col" class="text-left">
+                        <button class="btn btn-success" (click)="create()">Crear</button>
+                      </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let specialtyType of specialtyTypes">
+                      <td>{{ specialtyType.id }}</td>
+                      <td>{{ specialtyType.name }}</td>
+                      <td>{{ specialtyType.description | slice:0:100 }}{{ (specialtyType.description && specialtyType.description.length > 100) ? '...' : '' }}</td>
+                      <td>{{ specialtyType.machine_id }}</td>
+                      <td>{{ specialtyType.service_type_id }}</td>
+                      <td>
+                        <button class="btn btn-primary" (click)="edit(specialtyType.id!)">Editar</button>
+                        <button class="btn btn-primary" (click)="view(specialtyType.id!)">Ver</button>
+                        <button class="btn btn-danger" (click)="delete(specialtyType.id!)">Eliminar</button>
+                      </td>
+                    </tr>
+                    <tr *ngIf="!specialtyTypes || specialtyTypes.length === 0">
+                        <td colspan="6" class="text-center">No hay especialidades registradas.</td>
+                    </tr>
+                </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
