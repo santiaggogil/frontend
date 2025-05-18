@@ -93,6 +93,14 @@ const routes: Routes =[
         loadChildren: () => import('src/app/pages/quotas/quotas.module').then(m => m.QuotasModule)
       }
     ]
+  },{
+    path: 'towns',
+    children: [
+      {
+        path: '',
+        loadChildren: () => import('src/app/pages/towns/towns.module').then(m => m.TownsModule)
+      }
+    ]
   }
 ];
 

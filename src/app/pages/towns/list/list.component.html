@@ -7,31 +7,29 @@
     <div class="col">
       <div class="card shadow">
         <div class="card-header bg-transparent">
-          <h3 class="mb-0">Revisiones</h3>
+          <h3 class="mb-0">Municipios</h3>
         </div>
         <div class="card-body">
           <div class="table-responsive">
             <table class="table">
               <tr>
                 <th scope="col">ID</th>
-                <th scope="col">Observacion</th>
-                <th scope="col">Fecha</th>
-                <th scope="col">ID Maquina</th>
-                <th scope="col">ID Combo</th>
+                <th scope="col">Nombre</th>
+                <th scope="col">Habitantes</th>
+                <th scope="col">ID Departamento</th>
                 <th scope="col" class="text-left" > <!-- Celda para el botón Crear, alineado a la derecha -->
                   <button class="btn btn-success" (click)="create()">Crear</button>
                 </th>
               </tr>
-              <tr *ngFor="let review of reviews">
-                <td>{{ review.id }}</td>
-                <td>{{ review.observation }}</td>
-                <td>{{ review.date }}</td>
-                <td>{{ review.machine_id }}</td>
-                <td>{{ review.package_id }}</td>
+              <tr *ngFor="let town of towns">
+                <td>{{ town.id }}</td>
+                <td>{{ town.name }}</td>
+                <td>{{ town.population }}</td>
+                <td>{{ town.state_id }}</td>
                 <td>
-                  <button class="btn btn-primary" (click)="edit(review.id)">Editar</button>
-                  <button class="btn btn-primary" (click)="view(review.id)">Ver</button>
-                  <button class="btn btn-danger" (click)="delete(review.id)">Eliminar</button>
+                  <button class="btn btn-primary" (click)="edit(town.id)">Editar</button>
+                  <button class="btn btn-primary" (click)="view(town.id)">Ver</button>
+                  <button class="btn btn-danger" (click)="delete(town.id)">Eliminar</button>
                 </td>
             </table>
           </div>

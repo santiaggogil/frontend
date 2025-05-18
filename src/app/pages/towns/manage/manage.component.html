@@ -1,0 +1,88 @@
+<!-- pages/towns/manage/manage.component.html -->
+<div class="header bg-gradient-secondary pb-8 pt-5 pt-md-8"> <!-- Cambiado color para diferenciar -->
+</div>
+
+<div class="container-fluid mt--7">
+  <div class="row">
+    <div class="col">
+      <div class="card shadow">
+        <div class="card-header bg-transparent">
+          <h3 class="mb-0" *ngIf="mode === 1">Detalle de la Ciudad</h3>
+          <h3 class="mb-0" *ngIf="mode === 2">Crear Nueva Ciudad</h3>
+          <h3 class="mb-0" *ngIf="mode === 3">Actualizar Ciudad</h3>
+        </div>
+        <div class="card-body px-lg-5 py-lg-5">
+          <form class="form" *ngIf="theFormGroup" [formGroup]="theFormGroup" (ngSubmit)="onSubmit()">
+            <div class="container-fluid">
+
+              <div class="row mb-3" *ngIf="mode === 1 || mode === 3">
+                <label class="col-sm-3 col-form-label">ID</label>
+                <div class="col-sm-9">
+                  <input type="text" class="form-control" [value]="theTown?.id" disabled>
+                </div>
+              </div>
+
+              <!-- Nombre -->
+              <div class="row mb-3">
+                <label for="name" class="col-sm-3 col-form-label">Nombre</label>
+                <div class="col-sm-9">
+                  <input type="text" id="name" class="form-control" formControlName="name" [readOnly]="mode === 1">
+                  <div *ngIf="getTheFormGroup.name.errors && (getTheFormGroup.name.dirty || getTheFormGroup.name.touched || trySend)"
+                       class="text-danger small mt-1">
+                    <div *ngIf="getTheFormGroup.name.errors.required">El nombre es requerido.</div>
+                    <div *ngIf="getTheFormGroup.name.errors.minlength">El nombre debe tener al menos {{ getTheFormGroup.name.errors.minlength?.requiredLength }} caracteres.</div>
+                    <div *ngIf="getTheFormGroup.name.errors.maxlength">El nombre no puede exceder los {{ getTheFormGroup.name.errors.maxlength?.requiredLength }} caracteres.</div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Población -->
+              <div class="row mb-3">
+                <label for="population" class="col-sm-3 col-form-label">Población</label>
+                <div class="col-sm-9">
+                  <input type="number" id="population" class="form-control" formControlName="population" [readOnly]="mode === 1">
+                  <div *ngIf="getTheFormGroup.population.errors && (getTheFormGroup.population.dirty || getTheFormGroup.population.touched || trySend)"
+                       class="text-danger small mt-1">
+                    <div *ngIf="getTheFormGroup.population.errors.required">La población es requerida.</div>
+                    <div *ngIf="getTheFormGroup.population.errors.min">La población debe ser al menos {{ getTheFormGroup.population.errors.min?.min }}.</div>
+                    <div *ngIf="getTheFormGroup.population.errors.max">La población no puede ser mayor a {{ getTheFormGroup.population.errors.max?.max }}.</div>
+                    <div *ngIf="getTheFormGroup.population.errors.pattern">La población debe ser un número entero.</div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Selección de Estado -->
+              <div class="row mb-3">
+                <label for="state_id" class="col-sm-3 col-form-label">Estado</label>
+                <div class="col-sm-9">
+                  <select id="state_id" class="form-control" formControlName="state_id" [attr.disabled]="mode === 1 ? true : null">
+                    <option [ngValue]="null" disabled>Seleccione un estado...</option>
+                    <option *ngFor="let state of states" [value]="state.id">
+                      {{ state.name }} <!-- Asume que el modelo State tiene una propiedad 'name' -->
+                    </option>
+                  </select>
+                  <div *ngIf="getTheFormGroup.state_id.errors && (getTheFormGroup.state_id.dirty || getTheFormGroup.state_id.touched || trySend)"
+                       class="text-danger small mt-1">
+                    <div *ngIf="getTheFormGroup.state_id.errors.required">Debe seleccionar un estado.</div>
+                  </div>
+                </div>
+              </div>
+
+
+              <!-- Botones de Acción -->
+              <div class="row mt-4">
+                <div class="col-sm-9 offset-sm-3 d-flex flex-column">
+                  <button *ngIf="mode === 1" type="button" class="btn btn-primary w-100 mb-2" (click)="back()">Volver al Listado</button>
+                  <button *ngIf="mode === 2" type="submit" class="btn btn-success w-100 mb-2" [disabled]="theFormGroup.invalid && trySend">Crear Ciudad</button>
+                  <button *ngIf="mode === 3" type="submit" class="btn btn-warning w-100 mb-2" [disabled]="theFormGroup.invalid && trySend">Actualizar Ciudad</button>
+                  <button *ngIf="mode === 2 || mode === 3" type="button" class="btn btn-secondary w-100" (click)="back()">Cancelar</button>
+                </div>
+              </div>
+
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
