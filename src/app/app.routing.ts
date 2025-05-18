@@ -45,6 +45,14 @@ const routes: Routes =[
         loadChildren: () => import('src/app/pages/specialties/specialties.module').then(m => m.SpecialtiesModule)
       }
     ]
+  },{
+    path: 'services',
+    children: [
+      {
+        path: '',
+        loadChildren: () => import('src/app/pages/services/services.module').then(m => m.ServicesModule)
+      }
+    ]
   }
 ];
 
