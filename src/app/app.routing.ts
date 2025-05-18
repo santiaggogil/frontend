@@ -117,6 +117,14 @@ const routes: Routes =[
         loadChildren: () => import('src/app/pages/project-town/project-town.module').then(m => m.ProjectTownModule)
       }
     ]
+  },{
+    path: 'governors',
+    children: [
+      {
+        path: '',
+        loadChildren: () => import('src/app/pages/governors/governors.module').then(m => m.GovernorsModule)
+      }
+    ]
   }
 ];
 
