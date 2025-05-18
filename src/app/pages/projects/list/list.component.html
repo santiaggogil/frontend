@@ -1,0 +1,50 @@
+<div class="header bg-gradient-danger pb-8 pt-5 pt-md-8">
+</div>
+<!-- Page content -->
+<div class="container-fluid mt--7">
+  <!-- Table -->
+  <div class="row">
+    <div class="col">
+      <div class="card shadow">
+        <div class="card-header bg-transparent">
+          <h3 class="mb-0">Combos</h3>
+        </div>
+        <div class="card-body">
+          <div class="table-responsive">
+            <table class="table">
+              <tr>
+                <th scope="col">ID</th>
+                <th scope="col">Nombre</th>
+                <th scope="col">Fecha de inicio</th>
+                <th scope="col">Fecha de finalizacion</th>
+                <th scope="col">Estado</th>
+                <th scope="col">Presupuesto</th>
+                <th scope="col">Ubicacion</th>
+                <th scope="col">ID combo</th>
+                <th scope="col" class="text-left" > <!-- Celda para el botón Crear, alineado a la derecha -->
+                  <button class="btn btn-success" (click)="create()">Crear</button>
+                </th>
+              </tr>
+              <tr *ngFor="let project of projects">
+                <td>{{ project.id }}</td>
+                <td>{{ project.name }}</td>
+                <td>{{ project.start_date }}</td>
+                <td>{{ project.end_date }}</td>
+                <td>{{ project.status }}</td>
+                <td>{{ project.budget }}</td>
+                <td>{{ project.location }}</td>
+                <td>{{ project.package_id }}</td>
+                <td>
+                  <button class="btn btn-primary" (click)="edit(project.id)">Editar</button>
+                  <button class="btn btn-primary" (click)="view(project.id)">Ver</button>
+                  <button class="btn btn-danger" (click)="delete(project.id)">Eliminar</button>
+                </td>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
