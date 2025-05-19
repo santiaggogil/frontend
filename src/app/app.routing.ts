@@ -152,7 +152,128 @@ const routes: Routes =[
         loadChildren: () => import('src/app/pages/procedures/procedures.module').then(m => m.ProceduresModule)
       }
     ]
+  },{
+    path: 'services',
+    children: [
+      {
+        path: '',
+        loadChildren: () => import('src/app/pages/services/services.module').then(m => m.ServicesModule)
+      }
+    ]
+  },{
+    path: 'packages',
+    children: [
+      {
+        path: '',
+        loadChildren: () => import('src/app/pages/packages/packages.module').then(m => m.PackagesModule)
+      }
+    ]
+  },{
+    path: 'reviews',
+    children: [
+      {
+        path: '',
+        loadChildren: () => import('src/app/pages/reviews/reviews.module').then(m => m.ReviewsModule)
+      }
+    ]
+  },{
+    path: 'evidences',
+    children: [
+      {
+        path: '',
+        loadChildren: () => import('src/app/pages/evidences/evidences.module').then(m => m.EvidencesModule)
+      }
+    ]
+  },{
+    path: 'bills',
+    children: [
+      {
+        path: '',
+        loadChildren: () => import('src/app/pages/bills/bills.module').then(m => m.BillsModule)
+      }
+    ]
+  },{
+    path: 'quotas',
+    children: [
+      {
+        path: '',
+        loadChildren: () => import('src/app/pages/quotas/quotas.module').then(m => m.QuotasModule)
+      }
+    ]
+  },{
+    path: 'towns',
+    children: [
+      {
+        path: '',
+        loadChildren: () => import('src/app/pages/towns/towns.module').then(m => m.TownsModule)
+      }
+    ]
+  },{
+    path: 'projects',
+    children: [
+      {
+        path: '',
+        loadChildren: () => import('src/app/pages/projects/projects.module').then(m => m.ProjectsModule)
+      }
+    ]
+  },{
+    path: 'project-town',
+    children: [
+      {
+        path: '',
+        loadChildren: () => import('src/app/pages/project-town/project-town.module').then(m => m.ProjectTownModule)
+      }
+    ]
+  },{
+    path: 'governors',
+    children: [
+      {
+        path: '',
+        loadChildren: () => import('src/app/pages/governors/governors.module').then(m => m.GovernorsModule)
+      }
+    ]
+  },{
+    path: 'mayors',
+    children: [
+      {
+        path: '',
+        loadChildren: () => import('src/app/pages/mayors/mayors.module').then(m => m.MayorsModule)
+      }
+    ]
+  },{
+    path: 'mayor-town',
+    children: [
+      {
+        path: '',
+        loadChildren: () => import('src/app/pages/mayor-town/mayor-town.module').then(m => m.MayorTownModule)
+      }
+    ]
+  },{
+    path: 'chats',
+    children: [
+      {
+        path: '',
+        loadChildren: () => import('src/app/pages/chats/chats.module').then(m => m.ChatsModule)
+      }
+    ]
+  },{
+    path: 'messages',
+    children: [
+      {
+        path: '',
+        loadChildren: () => import('src/app/pages/messages/messages.module').then(m => m.MessagesModule)
+      }
+    ]
+  },{
+    path: 'state-governor',
+    children: [
+      {
+        path: '',
+        loadChildren: () => import('src/app/pages/state-governor/state-governor.module').then(m => m.StateGovernorModule)
+      }
+    ]
   }
+
 ];
 
 @NgModule({
