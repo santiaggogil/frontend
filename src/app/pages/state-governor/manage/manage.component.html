@@ -1,0 +1,101 @@
+<!-- pages/state-governor/manage/manage.component.html -->
+<div class="header bg-gradient-primary pb-8 pt-5 pt-md-8"> <!-- Cambiado color -->
+</div>
+
+<div class="container-fluid mt--7">
+  <div class="row">
+    <div class="col">
+      <div class="card shadow">
+        <div class="card-header bg-transparent">
+          <h3 class="mb-0" *ngIf="mode === 1">Detalle de Gobernador en Estado</h3>
+          <h3 class="mb-0" *ngIf="mode === 2">Asignar Gobernador a Estado</h3>
+          <h3 class="mb-0" *ngIf="mode === 3">Actualizar Gobernador en Estado</h3>
+        </div>
+        <div class="card-body px-lg-5 py-lg-5">
+          <form class="form" *ngIf="theFormGroup" [formGroup]="theFormGroup" (ngSubmit)="onSubmit()">
+            <div class="container-fluid">
+
+              <div class="row mb-3" *ngIf="mode === 1 || mode === 3">
+                <label class="col-sm-3 col-form-label">ID Relación</label>
+                <div class="col-sm-9">
+                  <input type="text" class="form-control" [value]="theStateGovernor?.id" disabled>
+                </div>
+              </div>
+
+              <!-- Fecha de Inicio -->
+              <div class="row mb-3">
+                <label for="start_date" class="col-sm-3 col-form-label">Fecha de Inicio</label>
+                <div class="col-sm-9">
+                  <input type="date" id="start_date" class="form-control" formControlName="start_date" [readOnly]="mode === 1">
+                  <div *ngIf="fg.start_date?.errors && (fg.start_date?.dirty || fg.start_date?.touched || trySend)"
+                       class="text-danger small mt-1">
+                    <div *ngIf="fg.start_date?.errors?.required">La fecha de inicio es requerida.</div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Fecha de Fin -->
+              <div class="row mb-3">
+                <label for="end_date" class="col-sm-3 col-form-label">Fecha de Fin</label>
+                <div class="col-sm-9">
+                  <input type="date" id="end_date" class="form-control" formControlName="end_date" [readOnly]="mode === 1">
+                  <div *ngIf="fg.end_date?.errors && (fg.end_date?.dirty || fg.end_date?.touched || trySend)"
+                       class="text-danger small mt-1">
+                    <div *ngIf="fg.end_date?.errors?.required">La fecha de finalización es requerida.</div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Selección de Estado -->
+              <div class="row mb-3">
+                <label for="state_id" class="col-sm-3 col-form-label">Estado</label>
+                <div class="col-sm-9">
+                  <select id="state_id" class="form-control" formControlName="state_id" [attr.disabled]="(mode === 1 || mode === 3) ? true : null"> <!-- Deshabilitado en view y update -->
+                    <option [ngValue]="null" disabled>Seleccione un estado...</option>
+                    <option *ngFor="let state of states" [value]="state.id">
+                      {{ state.name }} (ID: {{ state.id }}) <!-- Asume que State tiene 'name' -->
+                    </option>
+                  </select>
+                  <div *ngIf="fg.state_id?.errors && (fg.state_id?.dirty || fg.state_id?.touched || trySend)"
+                       class="text-danger small mt-1">
+                    <div *ngIf="fg.state_id?.errors?.required">Debe seleccionar un estado.</div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Selección de Gobernador -->
+              <div class="row mb-3">
+                <label for="governor_id" class="col-sm-3 col-form-label">Gobernador</label>
+                <div class="col-sm-9">
+                  <select id="governor_id" class="form-control" formControlName="governor_id" [attr.disabled]="(mode === 1 || mode === 3) ? true : null"> <!-- Deshabilitado en view y update -->
+                    <option [ngValue]="null" disabled>Seleccione un gobernador...</option>
+                    <option *ngFor="let governor of governors" [value]="governor.id">
+                      <!-- Asume que Governor tiene una propiedad identificable, ej: user_id o un nombre si lo tuviera -->
+                      Gobernador ID: {{ governor.id }} (Usuario: {{ governor.user_id }})
+                    </option>
+                  </select>
+                  <div *ngIf="fg.governor_id?.errors && (fg.governor_id?.dirty || fg.governor_id?.touched || trySend)"
+                       class="text-danger small mt-1">
+                    <div *ngIf="fg.governor_id?.errors?.required">Debe seleccionar un gobernador.</div>
+                  </div>
+                </div>
+              </div>
+
+
+              <!-- Botones de Acción -->
+              <div class="row mt-4">
+                <div class="col-sm-9 offset-sm-3 d-flex flex-column">
+                  <button *ngIf="mode === 1" type="button" class="btn btn-primary w-100 mb-2" (click)="back()">Volver al Listado</button>
+                  <button *ngIf="mode === 2" type="submit" class="btn btn-success w-100 mb-2" [disabled]="theFormGroup.invalid && trySend">Asignar Gobernador</button>
+                  <button *ngIf="mode === 3" type="submit" class="btn btn-warning w-100 mb-2" [disabled]="theFormGroup.invalid && trySend">Actualizar Asignación</button>
+                  <button *ngIf="mode === 2 || mode === 3" type="button" class="btn btn-secondary w-100" (click)="back()">Cancelar</button>
+                </div>
+              </div>
+
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
