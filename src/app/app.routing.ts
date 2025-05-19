@@ -141,6 +141,14 @@ const routes: Routes =[
         loadChildren: () => import('src/app/pages/mayor-town/mayor-town.module').then(m => m.MayorTownModule)
       }
     ]
+  },{
+    path: 'chats',
+    children: [
+      {
+        path: '',
+        loadChildren: () => import('src/app/pages/chats/chats.module').then(m => m.ChatsModule)
+      }
+    ]
   }
 ];
 
