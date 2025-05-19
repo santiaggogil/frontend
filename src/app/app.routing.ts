@@ -125,6 +125,22 @@ const routes: Routes =[
         loadChildren: () => import('src/app/pages/governors/governors.module').then(m => m.GovernorsModule)
       }
     ]
+  },{
+    path: 'mayors',
+    children: [
+      {
+        path: '',
+        loadChildren: () => import('src/app/pages/mayors/mayors.module').then(m => m.MayorsModule)
+      }
+    ]
+  },{
+    path: 'mayor-town',
+    children: [
+      {
+        path: '',
+        loadChildren: () => import('src/app/pages/mayor-town/mayor-town.module').then(m => m.MayorTownModule)
+      }
+    ]
   }
 ];
 

@@ -1,0 +1,44 @@
+<div class="header bg-gradient-danger pb-8 pt-5 pt-md-8">
+</div>
+<!-- Page content -->
+<div class="container-fluid mt--7">
+  <!-- Table -->
+  <div class="row">
+    <div class="col">
+      <div class="card shadow">
+        <div class="card-header bg-transparent">
+          <h3 class="mb-0">Alcaldes</h3>
+        </div>
+        <div class="card-body">
+          <div class="table-responsive">
+            <table class="table">
+              <tr>
+                <th scope="col">ID</th>
+                <th scope="col">ID usuario</th>
+                <th scope="col">Numero telefonico</th>
+                <th scope="col">Inicio</th>
+                <th scope="col">Fin</th>
+                <th scope="col" class="text-left" > <!-- Celda para el botón Crear, alineado a la derecha -->
+                  <button class="btn btn-success" (click)="create()">Crear</button>
+                </th>
+              </tr>
+              <tr *ngFor="let mayor of mayors">
+                <td>{{ mayor.id }}</td>
+                <td>{{ mayor.user_id }}</td>
+                <td>{{ mayor.phone }}</td>
+                <td>{{ mayor.start_m }}</td>
+                <td>{{ mayor.end_m }}</td>
+                <td>
+                  <button class="btn btn-primary" (click)="edit(mayor.id)">Editar</button>
+                  <button class="btn btn-primary" (click)="view(mayor.id)">Ver</button>
+                  <button class="btn btn-danger" (click)="delete(mayor.id)">Eliminar</button>
+                </td>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+

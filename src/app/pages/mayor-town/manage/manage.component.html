@@ -1,0 +1,101 @@
+<!-- pages/mayor-towns/manage/manage.component.html -->
+<div class="header bg-gradient-teal pb-8 pt-5 pt-md-8"> <!-- Cambiado color para diferenciar -->
+</div>
+
+<div class="container-fluid mt--7">
+  <div class="row">
+    <div class="col">
+      <div class="card shadow">
+        <div class="card-header bg-transparent">
+          <h3 class="mb-0" *ngIf="mode === 1">Detalle de Alcalde en Ciudad</h3>
+          <h3 class="mb-0" *ngIf="mode === 2">Asignar Alcalde a Ciudad</h3>
+          <h3 class="mb-0" *ngIf="mode === 3">Actualizar Alcalde en Ciudad</h3>
+        </div>
+        <div class="card-body px-lg-5 py-lg-5">
+          <form class="form" *ngIf="theFormGroup" [formGroup]="theFormGroup" (ngSubmit)="onSubmit()">
+            <div class="container-fluid">
+
+              <div class="row mb-3" *ngIf="mode === 1 || mode === 3">
+                <label class="col-sm-3 col-form-label">ID Relación</label>
+                <div class="col-sm-9">
+                  <input type="text" class="form-control" [value]="theMayorTown?.id" disabled>
+                </div>
+              </div>
+
+              <!-- Fecha de Inicio de Mandato -->
+              <div class="row mb-3">
+                <label for="start_date" class="col-sm-3 col-form-label">Inicio de Mandato</label>
+                <div class="col-sm-9">
+                  <input type="date" id="start_date" class="form-control" formControlName="start_date" [readOnly]="mode === 1">
+                  <div *ngIf="fg.start_date?.errors && (fg.start_date?.dirty || fg.start_date?.touched || trySend)"
+                       class="text-danger small mt-1">
+                    <div *ngIf="fg.start_date?.errors?.required">La fecha de inicio es requerida.</div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Fecha de Fin de Mandato -->
+              <div class="row mb-3">
+                <label for="end_date" class="col-sm-3 col-form-label">Fin de Mandato</label>
+                <div class="col-sm-9">
+                  <input type="date" id="end_date" class="form-control" formControlName="end_date" [readOnly]="mode === 1">
+                  <div *ngIf="fg.end_date?.errors && (fg.end_date?.dirty || fg.end_date?.touched || trySend)"
+                       class="text-danger small mt-1">
+                    <div *ngIf="fg.end_date?.errors?.required">La fecha de finalización es requerida.</div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Selección de Alcalde (Mayor) -->
+              <div class="row mb-3">
+                <label for="mayor_id" class="col-sm-3 col-form-label">Alcalde</label>
+                <div class="col-sm-9">
+                  <select id="mayor_id" class="form-control" formControlName="mayor_id" [attr.disabled]="mode === 1 ? true : null">
+                    <option [ngValue]="null" disabled>Seleccione un alcalde...</option>
+                    <option *ngFor="let mayor of mayors" [value]="mayor.id">
+                      <!-- Asume que Mayor tiene una propiedad identificable, ej: user_id o un nombre si lo tuviera -->
+                      Alcalde ID: {{ mayor.id }} (Usuario: {{ mayor.user_id }})
+                    </option>
+                  </select>
+                  <div *ngIf="fg.mayor_id?.errors && (fg.mayor_id?.dirty || fg.mayor_id?.touched || trySend)"
+                       class="text-danger small mt-1">
+                    <div *ngIf="fg.mayor_id?.errors?.required">Debe seleccionar un alcalde.</div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Selección de Ciudad (Town) -->
+              <div class="row mb-3">
+                <label for="town_id" class="col-sm-3 col-form-label">Ciudad</label>
+                <div class="col-sm-9">
+                  <select id="town_id" class="form-control" formControlName="town_id" [attr.disabled]="mode === 1 ? true : null">
+                    <option [ngValue]="null" disabled>Seleccione una ciudad...</option>
+                    <option *ngFor="let town of towns" [value]="town.id">
+                      {{ town.name }} (ID: {{ town.id }}) <!-- Asume que Town tiene 'name' -->
+                    </option>
+                  </select>
+                  <div *ngIf="fg.town_id?.errors && (fg.town_id?.dirty || fg.town_id?.touched || trySend)"
+                       class="text-danger small mt-1">
+                    <div *ngIf="fg.town_id?.errors?.required">Debe seleccionar una ciudad.</div>
+                  </div>
+                </div>
+              </div>
+
+
+              <!-- Botones de Acción -->
+              <div class="row mt-4">
+                <div class="col-sm-9 offset-sm-3 d-flex flex-column">
+                  <button *ngIf="mode === 1" type="button" class="btn btn-primary w-100 mb-2" (click)="back()">Volver al Listado</button>
+                  <button *ngIf="mode === 2" type="submit" class="btn btn-success w-100 mb-2" [disabled]="theFormGroup.invalid && trySend">Asignar Alcalde</button>
+                  <button *ngIf="mode === 3" type="submit" class="btn btn-warning w-100 mb-2" [disabled]="theFormGroup.invalid && trySend">Actualizar Asignación</button>
+                  <button *ngIf="mode === 2 || mode === 3" type="button" class="btn btn-secondary w-100" (click)="back()">Cancelar</button>
+                </div>
+              </div>
+
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

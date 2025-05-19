@@ -1,0 +1,91 @@
+<!-- pages/mayors/manage/manage.component.html -->
+<div class="header bg-gradient-success pb-8 pt-5 pt-md-8"> <!-- Cambiado color para diferenciar -->
+</div>
+
+<div class="container-fluid mt--7">
+  <div class="row">
+    <div class="col">
+      <div class="card shadow">
+        <div class="card-header bg-transparent">
+          <h3 class="mb-0" *ngIf="mode === 1">Detalle del Alcalde</h3>
+          <h3 class="mb-0" *ngIf="mode === 2">Registrar Nuevo Alcalde</h3>
+          <h3 class="mb-0" *ngIf="mode === 3">Actualizar Alcalde</h3>
+        </div>
+        <div class="card-body px-lg-5 py-lg-5">
+          <form class="form" *ngIf="theFormGroup" [formGroup]="theFormGroup" (ngSubmit)="onSubmit()">
+            <div class="container-fluid">
+
+              <div class="row mb-3" *ngIf="mode === 1 || mode === 3">
+                <label class="col-sm-3 col-form-label">ID Registro</label>
+                <div class="col-sm-9">
+                  <input type="text" class="form-control" [value]="theMayor?.id" disabled>
+                </div>
+              </div>
+
+              <!-- User ID -->
+              <div class="row mb-3">
+                <label for="user_id" class="col-sm-3 col-form-label">ID de Usuario</label>
+                <div class="col-sm-9">
+                  <input type="text" id="user_id" class="form-control" formControlName="user_id" [readOnly]="mode === 1">
+                  <div *ngIf="fg.user_id?.errors && (fg.user_id?.dirty || fg.user_id?.touched || trySend)"
+                       class="text-danger small mt-1">
+                    <div *ngIf="fg.user_id?.errors?.required">El ID de usuario es requerido.</div>
+                    <div *ngIf="fg.user_id?.errors?.maxlength">El ID de usuario no puede exceder los {{ fg.user_id?.errors?.maxlength?.requiredLength }} caracteres.</div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Teléfono -->
+              <div class="row mb-3">
+                <label for="phone" class="col-sm-3 col-form-label">Teléfono</label>
+                <div class="col-sm-9">
+                  <input type="tel" id="phone" class="form-control" formControlName="phone" [readOnly]="mode === 1">
+                  <div *ngIf="fg.phone?.errors && (fg.phone?.dirty || fg.phone?.touched || trySend)"
+                       class="text-danger small mt-1">
+                    <div *ngIf="fg.phone?.errors?.required">El teléfono es requerido.</div>
+                    <div *ngIf="fg.phone?.errors?.maxlength">El teléfono no puede exceder los {{ fg.phone?.errors?.maxlength?.requiredLength }} caracteres.</div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Fecha de Inicio de Mandato -->
+              <div class="row mb-3">
+                <label for="start_m" class="col-sm-3 col-form-label">Inicio de Mandato</label>
+                <div class="col-sm-9">
+                  <input type="date" id="start_m" class="form-control" formControlName="start_m" [readOnly]="mode === 1">
+                  <div *ngIf="fg.start_m?.errors && (fg.start_m?.dirty || fg.start_m?.touched || trySend)"
+                       class="text-danger small mt-1">
+                    <div *ngIf="fg.start_m?.errors?.required">La fecha de inicio es requerida.</div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Fecha de Fin de Mandato -->
+              <div class="row mb-3">
+                <label for="end_m" class="col-sm-3 col-form-label">Fin de Mandato</label>
+                <div class="col-sm-9">
+                  <input type="date" id="end_m" class="form-control" formControlName="end_m" [readOnly]="mode === 1">
+                  <div *ngIf="fg.end_m?.errors && (fg.end_m?.dirty || fg.end_m?.touched || trySend)"
+                       class="text-danger small mt-1">
+                    <div *ngIf="fg.end_m?.errors?.required">La fecha de finalización es requerida.</div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Botones de Acción -->
+              <div class="row mt-4">
+                <div class="col-sm-9 offset-sm-3 d-flex flex-column">
+                  <button *ngIf="mode === 1" type="button" class="btn btn-primary w-100 mb-2" (click)="back()">Volver al Listado</button>
+                  <button *ngIf="mode === 2" type="submit" class="btn btn-success w-100 mb-2" [disabled]="theFormGroup.invalid && trySend">Registrar Alcalde</button>
+                  <button *ngIf="mode === 3" type="submit" class="btn btn-warning w-100 mb-2" [disabled]="theFormGroup.invalid && trySend">Actualizar Alcalde</button>
+                  <button *ngIf="mode === 2 || mode === 3" type="button" class="btn btn-secondary w-100" (click)="back()">Cancelar</button>
+                </div>
+              </div>
+
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
