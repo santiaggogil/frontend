@@ -1,0 +1,119 @@
+<!-- pages/quotas/manage/manage.component.html -->
+<div class="header bg-gradient-warning pb-8 pt-5 pt-md-8"> <!-- Cambiado color para diferenciar -->
+</div>
+
+<div class="container-fluid mt--7">
+  <div class="row">
+    <div class="col">
+      <div class="card shadow">
+        <div class="card-header bg-transparent">
+          <h3 class="mb-0" *ngIf="mode === 1">Detalle de la Cuota</h3>
+          <h3 class="mb-0" *ngIf="mode === 2">Crear Nueva Cuota</h3>
+          <h3 class="mb-0" *ngIf="mode === 3">Actualizar Cuota</h3>
+        </div>
+        <div class="card-body px-lg-5 py-lg-5">
+          <form class="form" *ngIf="theFormGroup" [formGroup]="theFormGroup" (ngSubmit)="onSubmit()">
+            <div class="container-fluid">
+
+              <div class="row mb-3" *ngIf="mode === 1 || mode === 3">
+                <label class="col-sm-3 col-form-label">ID</label>
+                <div class="col-sm-9">
+                  <input type="text" class="form-control" [value]="theQuota?.id" disabled>
+                </div>
+              </div>
+
+              <!-- Monto -->
+              <div class="row mb-3">
+                <label for="amount" class="col-sm-3 col-form-label">Monto</label>
+                <div class="col-sm-9">
+                  <input type="number" id="amount" class="form-control" formControlName="amount" [readOnly]="mode === 1" step="0.01">
+                  <div *ngIf="getTheFormGroup.amount.errors && (getTheFormGroup.amount.dirty || getTheFormGroup.amount.touched || trySend)"
+                       class="text-danger small mt-1">
+                    <div *ngIf="getTheFormGroup.amount.errors.required">El monto es requerido.</div>
+                    <div *ngIf="getTheFormGroup.amount.errors.min">El monto debe ser un número positivo.</div>
+                    <div *ngIf="getTheFormGroup.amount.errors.pattern">El monto debe ser un número válido (ej: 120.50).</div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Fecha de Vencimiento -->
+              <div class="row mb-3">
+                <label for="due_date" class="col-sm-3 col-form-label">Fecha de Vencimiento</label>
+                <div class="col-sm-9">
+                  <input type="datetime-local" id="due_date" class="form-control" formControlName="due_date" [readOnly]="mode === 1">
+                  <div *ngIf="getTheFormGroup.due_date.errors && (getTheFormGroup.due_date.dirty || getTheFormGroup.due_date.touched || trySend)"
+                       class="text-danger small mt-1">
+                    <div *ngIf="getTheFormGroup.due_date.errors.required">La fecha de vencimiento es requerida.</div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Estado de Pago -->
+              <div class="row mb-3">
+                <label for="payment_status" class="col-sm-3 col-form-label">Estado de Pago</label>
+                <div class="col-sm-9">
+                  <select id="payment_status" class="form-control" formControlName="payment_status" [attr.disabled]="mode === 1 ? true : null">
+                    <option *ngFor="let statusOption of paymentStatusOptions" [value]="statusOption">
+                      {{ statusOption | titlecase }}
+                    </option>
+                  </select>
+                  <div *ngIf="getTheFormGroup.payment_status.errors && (getTheFormGroup.payment_status.dirty || getTheFormGroup.payment_status.touched || trySend)"
+                       class="text-danger small mt-1">
+                    <div *ngIf="getTheFormGroup.payment_status.errors.required">El estado de pago es requerido.</div>
+                    <div *ngIf="getTheFormGroup.payment_status.errors.maxlength">El estado no puede exceder los {{ getTheFormGroup.payment_status.errors.maxlength?.requiredLength }} caracteres.</div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Selección de Factura (Bill) -->
+              <div class="row mb-3">
+                <label for="bill_id" class="col-sm-3 col-form-label">Factura Asociada</label>
+                <div class="col-sm-9">
+                  <select id="bill_id" class="form-control" formControlName="bill_id" [attr.disabled]="mode === 1 ? true : null">
+                    <option [ngValue]="null" disabled>Seleccione una factura...</option>
+                    <option *ngFor="let bill of bills" [value]="bill.id">
+                      Factura ID: {{ bill.id }} (Monto: {{bill.total_amount | currency }}) <!-- Ajusta cómo mostrar la factura -->
+                    </option>
+                  </select>
+                  <div *ngIf="getTheFormGroup.bill_id.errors && (getTheFormGroup.bill_id.dirty || getTheFormGroup.bill_id.touched || trySend)"
+                       class="text-danger small mt-1">
+                    <div *ngIf="getTheFormGroup.bill_id.errors.required">Debe seleccionar una factura.</div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Selección de Servicio -->
+              <div class="row mb-3">
+                <label for="service_id" class="col-sm-3 col-form-label">Servicio Asociado</label>
+                <div class="col-sm-9">
+                  <select id="service_id" class="form-control" formControlName="service_id" [attr.disabled]="mode === 1 ? true : null">
+                    <option [ngValue]="null" disabled>Seleccione un servicio...</option>
+                    <option *ngFor="let service of services" [value]="service.id">
+                      {{ service.name }} (ID: {{ service.id }})
+                    </option>
+                  </select>
+                  <div *ngIf="getTheFormGroup.service_id.errors && (getTheFormGroup.service_id.dirty || getTheFormGroup.service_id.touched || trySend)"
+                       class="text-danger small mt-1">
+                    <div *ngIf="getTheFormGroup.service_id.errors.required">Debe seleccionar un servicio.</div>
+                  </div>
+                </div>
+              </div>
+
+
+              <!-- Botones de Acción -->
+              <div class="row mt-4">
+                <div class="col-sm-9 offset-sm-3 d-flex flex-column">
+                  <button *ngIf="mode === 1" type="button" class="btn btn-primary w-100 mb-2" (click)="back()">Volver al Listado</button>
+                  <button *ngIf="mode === 2" type="submit" class="btn btn-success w-100 mb-2" [disabled]="theFormGroup.invalid && trySend">Crear Cuota</button>
+                  <button *ngIf="mode === 3" type="submit" class="btn btn-warning w-100 mb-2" [disabled]="theFormGroup.invalid && trySend">Actualizar Cuota</button>
+                  <button *ngIf="mode === 2 || mode === 3" type="button" class="btn btn-secondary w-100" (click)="back()">Cancelar</button>
+                </div>
+              </div>
+
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
