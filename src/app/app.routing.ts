@@ -149,6 +149,14 @@ const routes: Routes =[
         loadChildren: () => import('src/app/pages/chats/chats.module').then(m => m.ChatsModule)
       }
     ]
+  },{
+    path: 'messages',
+    children: [
+      {
+        path: '',
+        loadChildren: () => import('src/app/pages/messages/messages.module').then(m => m.MessagesModule)
+      }
+    ]
   }
 ];
 
