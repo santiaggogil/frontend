@@ -1,0 +1,71 @@
+<div class="header bg-gradient-danger pb-8 pt-5 pt-md-8">
+</div>
+
+<!-- Page content -->
+<div class="container-fluid mt--7">
+  <!-- Form -->
+  <div class="row">
+    <div class="col">
+      <div class="card shadow">
+        <div class="card-header bg-transparent">
+          <h3 class="mb-0" *ngIf="mode === 1">Detalle de Procedimiento de Mantenimiento</h3>
+          <h3 class="mb-0" *ngIf="mode === 2">Crear Nuevo Procedimiento de Mantenimiento</h3>
+          <h3 class="mb-0" *ngIf="mode === 3">Actualizar Procedimiento de Mantenimiento</h3>
+        </div>
+
+        <form class="form" *ngIf="theFormGroup" [formGroup]="theFormGroup" (ngSubmit)="mode === 2 ? create() : (mode === 3 ? update() : null)">
+          <div class="card-body container">
+            <!-- ID Procedimiento de Mantenimiento (Solo visualización) -->
+            <div class="row mb-3" *ngIf="(mode === 1 || mode === 3) && maintenanceProcedure?.id">
+              <div class="col-md-3 col-form-label">ID Procedimiento</div>
+              <div class="col-md-9">
+                <input type="text" class="form-control-plaintext" [value]="maintenanceProcedure?.id" readonly>
+              </div>
+            </div>
+
+            <!-- ID Mantenimiento -->
+            <div class="row mb-3">
+              <label for="maintenance_id" class="col-md-3 col-form-label">ID Mantenimiento</label>
+              <div class="col-md-9">
+                <input type="number" id="maintenance_id" class="form-control" formControlName="maintenance_id"
+                       [ngClass]="{'is-invalid': trySend && formControls.maintenance_id?.errors && formControls.maintenance_id.enabled && formControls.maintenance_id.touched}">
+                <div *ngIf="trySend && formControls.maintenance_id?.errors && formControls.maintenance_id.enabled && formControls.maintenance_id.touched" class="invalid-feedback">
+                  <strong *ngIf="formControls.maintenance_id.errors.required">El ID del mantenimiento es requerido.</strong>
+                  <strong *ngIf="formControls.maintenance_id.errors.min">El ID del mantenimiento debe ser un número positivo (mínimo {{ formControls.maintenance_id.errors.min?.min }}).</strong>
+                </div>
+              </div>
+            </div>
+
+            <!-- ID Procedimiento -->
+            <div class="row mb-3">
+              <label for="procedure_id" class="col-md-3 col-form-label">ID Procedimiento</label>
+              <div class="col-md-9">
+                <input type="number" id="procedure_id" class="form-control" formControlName="procedure_id"
+                       [ngClass]="{'is-invalid': trySend && formControls.procedure_id?.errors && formControls.procedure_id.enabled && formControls.procedure_id.touched}">
+                <div *ngIf="trySend && formControls.procedure_id?.errors && formControls.procedure_id.enabled && formControls.procedure_id.touched" class="invalid-feedback">
+                  <strong *ngIf="formControls.procedure_id.errors.required">El ID del procedimiento es requerido.</strong>
+                  <strong *ngIf="formControls.procedure_id.errors.min">El ID del procedimiento debe ser un número positivo (mínimo {{ formControls.procedure_id.errors.min?.min }}).</strong>
+                </div>
+              </div>
+            </div>
+
+            <hr>
+            <div class="row">
+              <div class="col-md-9 offset-md-3 d-flex justify-content-end"> <!-- Alineación de botones -->
+                <button type="button" class="btn btn-secondary me-2" (click)="back()">
+                  <ng-container *ngIf="mode === 1">Volver</ng-container>
+                  <ng-container *ngIf="mode === 2 || mode === 3">Cancelar</ng-container>
+                </button>
+                <button *ngIf="mode === 2" type="submit" class="btn btn-primary">Crear Procedimiento</button>
+                <button *ngIf="mode === 3" type="submit" class="btn btn-primary">Actualizar Procedimiento</button>
+              </div>
+            </div>
+          </div>
+        </form>
+        <div *ngIf="!theFormGroup && mode !==2 " class="card-body">
+            <p class="text-center">Cargando datos del procedimiento de mantenimiento...</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

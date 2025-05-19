@@ -3,30 +3,29 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import Swal from 'sweetalert2';
 
-import { New } from 'src/app/models/new.model'; // CAMBIADO
-import { NewService } from 'src/app/services/new.service'; // CAMBIADO (asegúrate que este servicio exista)
+import { New } from 'src/app/models/new.model';
+import { NewService } from 'src/app/services/new.service';
 
 @Component({
-  selector: 'app-manage-new', // Selector actualizado
+  selector: 'app-manage-new',
   templateUrl: './manage.component.html',
-  styleUrls: ['./manage.component.scss'] // Puedes usar el mismo SCSS o uno específico
+  styleUrls: ['./manage.component.scss']
 })
-export class ManageNewComponent implements OnInit { // Nombre de clase actualizado
+export class ManageNewComponent implements OnInit {
 
   mode: number = 1; // 1 - view, 2 - create, 3 - update
-  currentNewsItem!: New; // CAMBIADO el tipo y nombre de la variable
+  currentNewsItem!: New;
   theFormGroup!: FormGroup;
   trySend: boolean = false;
-  isLoading: boolean = true; // Para mostrar "Cargando..."
+  isLoading: boolean = true;
 
   constructor(
     private activateRoute: ActivatedRoute,
-    private newService: NewService, // CAMBIADO el servicio
+    private newService: NewService,
     private router: Router,
     private fb: FormBuilder
   ) {
     this.currentNewsItem = {}; // Inicializar
-    // No llamamos configFormGroup aquí para evitar que se ejecute antes de tener datos o saber el modo
   }
 
   ngOnInit(): void {
@@ -38,14 +37,12 @@ export class ManageNewComponent implements OnInit { // Nombre de clase actualiza
       this.isLoading = false;
     } else if ((this.mode === 1 || this.mode === 3) && idFromRoute) { // Modo Vista o Actualizar
       this.getNewsItem(+idFromRoute);
-    } else if (this.mode === 1 && !idFromRoute) { // Modo Vista sin ID (error de ruta o lógica)
+    } else if (this.mode === 1 && !idFromRoute) { // Modo Vista sin ID
       Swal.fire('Error', 'No se proporcionó ID para ver la novedad.', 'error');
-      this.router.navigate(['/news/list']); // CAMBIAR RUTA si es necesario
+      this.router.navigate(['/news/list']);
       this.isLoading = false;
     } else {
-      // Caso inesperado, podría ser modo create sin la URL correcta.
-      // Redirigir o mostrar error.
-      this.router.navigate(['/news/list']); // CAMBIAR RUTA si es necesario
+      this.router.navigate(['/news/list']);
       this.isLoading = false;
     }
   }
@@ -72,9 +69,8 @@ export class ManageNewComponent implements OnInit { // Nombre de clase actualiza
         [Validators.required, Validators.maxLength(500)]
       ],
       reported_at: [
-        // Para 'update', el valor inicial vendrá formateado. Para 'create', será ''.
-        // El input tipo 'date' necesita 'YYYY-MM-DD'
-        newsData?.reported_at ? this.formatDateForInput(newsData.reported_at) : '',
+        // Aquí formateamos lo que viene del backend para el input date
+        newsData?.reported_at ? this.formatDateTimeToInputDate(newsData.reported_at) : '',
         [Validators.required]
       ],
       shift_id: [
@@ -86,66 +82,82 @@ export class ManageNewComponent implements OnInit { // Nombre de clase actualiza
     if (this.mode === 1) { // Modo Vista
       this.theFormGroup.disable();
     }
-    // En modo actualización, podrías querer deshabilitar ciertos campos (ej. shift_id si no debe cambiar)
-    // if (this.mode === 3 && this.formControls.shift_id) {
-    //   this.formControls.shift_id.disable();
-    // }
   }
 
-  // Función para formatear la fecha a YYYY-MM-DD para el input type="date"
-  private formatDateForInput(dateString: string): string {
-    if (!dateString) return '';
+  /**
+   * Formatea una cadena DateTime (ISO o similar) a 'YYYY-MM-DD' para el input type="date".
+   */
+  private formatDateTimeToInputDate(dateTimeString: string | Date): string {
+    if (!dateTimeString) return '';
     try {
-      // Intenta parsear la fecha. Si ya está en YYYY-MM-DD, Date lo manejará.
-      // Si es un ISO string completo, también.
-      const date = new Date(dateString);
-      // Ajuste para zona horaria: Si el backend devuelve UTC y el input espera local,
-      // podrías tener un día de diferencia. `toISOString().split('T')[0]` es robusto
-      // si la fecha del backend es una representación de "fecha" sin hora específica o en UTC.
-      // Si la fecha del backend es local, y se parsea como local, esto funciona:
-      // const year = date.getFullYear();
-      // const month = ('0' + (date.getMonth() + 1)).slice(-2);
-      // const day = ('0' + date.getDate()).slice(-2);
-      // return `${year}-${month}-${day}`;
+      // Crear un objeto Date. new Date() es bastante bueno parseando formatos ISO.
+      const dateObj = new Date(dateTimeString);
 
-      // La forma más segura si el backend envía ISO (o algo que `new Date` interpreta como UTC por defecto si no hay offset)
-      // y queremos el día "calendario" sin importar la zona horaria del cliente para el input:
-      // Si reported_at del backend es '2023-10-27' (solo fecha), `new Date('2023-10-27')` puede interpretarlo como UTC 00:00.
-      // Si es '2023-10-27T00:00:00Z', es explícitamente UTC.
-      // Para evitar problemas con zonas horarias al convertir a YYYY-MM-DD para el input:
-      if (dateString.includes('T')) { // Si es un datetime completo
-        return date.toISOString().split('T')[0];
-      } else { // Si es solo una cadena de fecha como 'YYYY-MM-DD' o 'MM/DD/YYYY'
-        // new Date() puede ser inconsistente aquí. Es mejor si el backend ya da YYYY-MM-DD o ISO.
-        // Asumiendo que si no tiene 'T', ya es algo que el input 'date' podría tomar o es YYYY-MM-DD
-        const parts = dateString.split(/[-/]/); // Manejar separadores comunes
-        if (parts.length === 3) {
-            // Intenta reordenar si es necesario, o asumir YYYY-MM-DD
-            // Esta parte puede necesitar ajuste según el formato exacto de `reported_at` si no es ISO
-            if (parts[0].length === 4) return dateString; // Asumir YYYY-MM-DD
-        }
-        // Fallback a la conversión ISO, puede tener off-by-one por timezone si la original no era UTC
-        return new Date(dateString).toISOString().split('T')[0];
-      }
-
+      // Para evitar problemas de zona horaria al extraer partes, usamos los métodos UTC
+      // o convertimos a ISO y tomamos la primera parte.
+      // toISOString() devuelve YYYY-MM-DDTHH:mm:ss.sssZ
+      return dateObj.toISOString().split('T')[0];
     } catch (e) {
-      console.error("Error formateando fecha: ", dateString, e);
-      return ''; // Retorna vacío si hay error de formato
+      console.error("Error formateando DateTime a InputDate: ", dateTimeString, e);
+      // Si falla el parseo, intentar devolver la cadena original si ya es YYYY-MM-DD
+      if (typeof dateTimeString === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(dateTimeString)) {
+        return dateTimeString;
+      }
+      return '';
     }
   }
+
+  /**
+   * Formatea una cadena 'YYYY-MM-DD' (del input) a una cadena DateTime ISO
+   * (YYYY-MM-DDTHH:mm:ss.sssZ) para enviar al backend.
+   * Se asume medianoche UTC.
+   */
+  private formatDateToDateTimeISO(dateString: string): string | null {
+    if (!dateString) return null;
+    try {
+      // Validar que sea YYYY-MM-DD
+      if (!/^\d{4}-\d{2}-\d{2}$/.test(dateString)) {
+        console.error("Formato de fecha inválido para convertir a DateTime ISO:", dateString);
+        return null; // O lanzar un error
+      }
+      // Esto crea un objeto Date para la medianoche en la zona horaria LOCAL del navegador.
+      // Al usar toISOString(), se convierte a UTC.
+      // Por ejemplo, si dateString es "2023-10-27" y el navegador está en GMT-5:
+      // new Date("2023-10-27") es "2023-10-27T00:00:00.000-05:00"
+      // .toISOString() lo convierte a "2023-10-27T05:00:00.000Z"
+
+      // Si quieres que SIEMPRE sea T00:00:00.000Z (medianoche UTC), es más directo:
+      return `${dateString}T00:00:00.000Z`;
+
+      // Si prefieres que sea medianoche en la zona local del usuario y luego convertir a UTC:
+      // const localDate = new Date(dateString);
+      // return localDate.toISOString();
+      // ¡CUIDADO! Esto puede hacer que la fecha *en UTC* cambie al día anterior o siguiente
+      // dependiendo de la zona horaria del usuario.
+      // Ejemplo: "2023-10-27" en Australia (GMT+10) se convierte a new Date(...)
+      // que es 2023-10-27T00:00:00+10:00. En ISOString UTC, es 2023-10-26T14:00:00Z.
+      // Por eso, `${dateString}T00:00:00.000Z` es generalmente más seguro si el backend
+      // espera una fecha y la hora no importa o debe ser el inicio del día UTC.
+
+    } catch (e) {
+      console.error("Error formateando Date a DateTime ISO: ", dateString, e);
+      return null;
+    }
+  }
+
 
   getNewsItem(id: number) {
     this.isLoading = true;
     this.newService.view(id).subscribe({
       next: (responseData: New) => {
         this.currentNewsItem = responseData;
-        this.configFormGroup(this.currentNewsItem); // Configura el form con los datos
+        this.configFormGroup(this.currentNewsItem);
         this.isLoading = false;
       },
       error: (err) => {
         const errorMessage = err.error?.message || 'No se pudo cargar la novedad.';
         Swal.fire('Error', errorMessage, 'error');
-        this.router.navigate(['/news/list']); // CAMBIAR RUTA si es necesario
+        this.router.navigate(['/news/list']);
         this.isLoading = false;
       }
     });
@@ -156,7 +168,7 @@ export class ManageNewComponent implements OnInit { // Nombre de clase actualiza
   }
 
   back() {
-    this.router.navigate(['/news/list']); // CAMBIAR RUTA si es necesario
+    this.router.navigate(['/news/list']);
   }
 
   handleSubmit() {
@@ -172,24 +184,32 @@ export class ManageNewComponent implements OnInit { // Nombre de clase actualiza
     if (this.theFormGroup.invalid) {
       Swal.fire('Formulario Inválido', 'Por favor, complete todos los campos requeridos correctamente.', 'error');
       Object.values(this.formControls).forEach(control => {
-        control.markAsDirty(); // o markAsTouched()
-        control.updateValueAndValidity(); // para que se muestren los errores
+        control.markAsDirty();
+        control.updateValueAndValidity();
       });
       return;
     }
 
     const formValues = this.theFormGroup.value;
+    const formattedReportedAt = this.formatDateToDateTimeISO(formValues.reported_at);
+
+    if (!formattedReportedAt) {
+        Swal.fire('Error de Fecha', 'La fecha de reporte no es válida.', 'error');
+        this.formControls['reported_at'].setErrors({'invalidDate': true});
+        return;
+    }
+
     const dataToCreate: New = {
       title: formValues.title,
       description: formValues.description,
-      reported_at: formValues.reported_at, // El input date ya da YYYY-MM-DD
-      shift_id: +formValues.shift_id // Convertir a número
+      reported_at: formattedReportedAt, // Enviamos la fecha formateada como DateTime ISO
+      shift_id: +formValues.shift_id
     };
 
     this.newService.create(dataToCreate).subscribe({
       next: () => {
         Swal.fire('Creada', "Novedad creada correctamente.", 'success');
-        this.router.navigate(['/news/list']); // CAMBIAR RUTA si es necesario
+        this.router.navigate(['/news/list']);
       },
       error: (err) => {
         const errorMessage = err.error?.message || 'No se pudo crear la novedad.';
@@ -211,23 +231,27 @@ export class ManageNewComponent implements OnInit { // Nombre de clase actualiza
       return;
     }
 
-    // Usar getRawValue() para incluir campos deshabilitados si fuera necesario,
-    // pero para 'New' probablemente no haya campos deshabilitados que se quieran enviar (excepto 'id' que se toma de currentNewsItem).
-    // Si 'shift_id' se deshabilita en update, y quieres enviar su valor original, getRawValue() es útil.
     const formValues = this.theFormGroup.getRawValue();
+    const formattedReportedAt = this.formatDateToDateTimeISO(formValues.reported_at);
+
+    if (!formattedReportedAt) {
+        Swal.fire('Error de Fecha', 'La fecha de reporte no es válida.', 'error');
+        this.formControls['reported_at'].setErrors({'invalidDate': true});
+        return;
+    }
 
     const dataToUpdate: New = {
-      id: this.currentNewsItem.id, // El ID viene del objeto cargado
+      id: this.currentNewsItem.id,
       title: formValues.title,
       description: formValues.description,
-      reported_at: formValues.reported_at, // El input date ya da YYYY-MM-DD
-      shift_id: +formValues.shift_id // Convertir a número
+      reported_at: formattedReportedAt, // Enviamos la fecha formateada como DateTime ISO
+      shift_id: +formValues.shift_id
     };
 
     this.newService.update(dataToUpdate).subscribe({
       next: () => {
         Swal.fire('Actualizada', "Novedad actualizada correctamente.", 'success');
-        this.router.navigate(['/news/list']); // CAMBIAR RUTA si es necesario
+        this.router.navigate(['/news/list']);
       },
       error: (err) => {
         const errorMessage = err.error?.message || 'No se pudo actualizar la novedad.';

@@ -1,0 +1,51 @@
+<div class="header bg-gradient-primary pb-8 pt-5 pt-md-8">
+</div>
+<!-- Page content -->
+<div class="container-fluid mt--7">
+  <!-- Table -->
+  <div class="row">
+    <div class="col">
+      <div class="card shadow">
+        <div class="card-header bg-transparent">
+          <h3 class="mb-0">Dispositivos GPS</h3>
+        </div>
+        <div class="card-body">
+          <div class="table-responsive">
+            <table class="table">
+                <tr>
+                  <th scope="col">ID</th>
+                  <th scope="col">Marca</th>
+                  <th scope="col">Modelo</th>
+                  <th scope="col">Año</th>
+                  <th scope="col">ID Máquina</th> <!-- Columna para machine_id añadida -->
+                  <th scope="col">Opciones</th>
+                  <th scope="col" class="text-left">
+                    <button class="btn btn-success" (click)="create()">Crear GPS</button>
+                  </th>
+                </tr>
+              <tbody>
+                <tr *ngFor="let gps of gpses">
+                  <td>{{ gps.id }}</td>
+                  <td>{{ gps.brand }}</td>
+                  <td>{{ gps.model }}</td>
+                  <td>{{ gps.year }}</td>
+                  <td>{{ gps.machine_id }}</td>
+                  <td>
+                    <button class="btn btn-primary" (click)="edit(gps.id!)">Editar</button>
+                    <button class="btn btn-primary" (click)="view(gps.id!)">Ver</button>
+                    <button class="btn btn-danger" (click)="delete(gps.id!)">Eliminar</button>
+                  </td>
+                  <td></td> <!-- Celda vacía para alinear con la columna del botón "Crear" -->
+                </tr>
+                <tr *ngIf="!gpses || gpses.length === 0">
+                    <!-- Colspan ajustado a 7: ID, Marca, Modelo, Año, ID Máquina, Opciones, Botón Crear -->
+                    <td colspan="7" class="text-center">No hay GPS registrados.</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

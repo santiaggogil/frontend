@@ -1,0 +1,110 @@
+<div class="header bg-gradient-danger pb-8 pt-5 pt-md-8"> <!-- Mantenemos el color original de tu plantilla -->
+</div>
+
+<!-- Page content -->
+<div class="container-fluid mt--7">
+  <!-- Form -->
+  <div class="row">
+    <div class="col">
+      <div class="card shadow">
+        <div class="card-header bg-transparent">
+          <!-- Títulos adaptados para Gps -->
+          <h3 class="mb-0" *ngIf="mode === 1">Detalle del GPS</h3>
+          <h3 class="mb-0" *ngIf="mode === 2">Crear Nuevo GPS</h3>
+          <h3 class="mb-0" *ngIf="mode === 3">Actualizar GPS</h3>
+        </div>
+
+        <form class="form" *ngIf="theFormGroup" [formGroup]="theFormGroup" (ngSubmit)="mode === 2 ? create() : (mode === 3 ? update() : null)">
+          <div class="card-body container">
+            <!-- ID GPS (Solo visualización) -->
+            <div class="row mb-3" *ngIf="(mode === 1 || mode === 3) && gps?.id">
+              <div class="col-md-3 col-form-label">ID GPS</div>
+              <div class="col-md-9">
+                <input type="text" class="form-control-plaintext" [value]="gps?.id" readonly>
+              </div>
+            </div>
+
+            <!-- Marca del GPS -->
+            <div class="row mb-3">
+              <label for="brand" class="col-md-3 col-form-label">Marca</label>
+              <div class="col-md-9">
+                <input type="text" id="brand" class="form-control" formControlName="brand"
+                       [ngClass]="{'is-invalid': trySend && formControls.brand?.errors}" [readonly]="mode === 1">
+                <div *ngIf="trySend && formControls.brand?.errors" class="invalid-feedback">
+                  <strong *ngIf="formControls.brand.errors.required">La marca es requerida.</strong>
+                  <strong *ngIf="formControls.brand.errors.maxlength">
+                    La marca no debe exceder los {{ formControls.brand.errors.maxlength.requiredLength }} caracteres.
+                  </strong>
+                </div>
+              </div>
+            </div>
+
+            <!-- Modelo del GPS -->
+            <div class="row mb-3">
+              <label for="model" class="col-md-3 col-form-label">Modelo</label>
+              <div class="col-md-9">
+                <input type="text" id="model" class="form-control" formControlName="model"
+                       [ngClass]="{'is-invalid': trySend && formControls.model?.errors}" [readonly]="mode === 1">
+                <div *ngIf="trySend && formControls.model?.errors" class="invalid-feedback">
+                  <strong *ngIf="formControls.model.errors.required">El modelo es requerido.</strong>
+                  <strong *ngIf="formControls.model.errors.maxlength">
+                    El modelo no debe exceder los {{ formControls.model.errors.maxlength.requiredLength }} caracteres.
+                  </strong>
+                </div>
+              </div>
+            </div>
+
+            <!-- Año del GPS -->
+            <div class="row mb-3">
+              <label for="year" class="col-md-3 col-form-label">Año</label>
+              <div class="col-md-9">
+                <input type="number" id="year" class="form-control" formControlName="year"
+                       [ngClass]="{'is-invalid': trySend && formControls.year?.errors}" [readonly]="mode === 1">
+                <div *ngIf="trySend && formControls.year?.errors" class="invalid-feedback">
+                  <strong *ngIf="formControls.year.errors.required">El año es requerido.</strong>
+                  <strong *ngIf="formControls.year.errors.min">El año debe ser un número positivo (ej: mayor a {{ formControls.year.errors.min.min -1 }}).</strong>
+                  <strong *ngIf="formControls.year.errors.max">El año no puede ser mayor a {{ formControls.year.errors.max.max }}.</strong>
+                  <strong *ngIf="formControls.year.errors.pattern">El año debe tener 4 dígitos.</strong>
+                </div>
+              </div>
+            </div>
+
+            <!-- Máquina asociada al GPS (Select) -->
+            <div class="row mb-3">
+              <label for="machine_id" class="col-md-3 col-form-label">Máquina Asociada</label>
+              <div class="col-md-9">
+                <select id="machine_id" class="form-control" formControlName="machine_id"
+                        [ngClass]="{'is-invalid': trySend && formControls.machine_id?.errors}"
+                        [attr.disabled]="mode === 1 ? true : null">
+                  <option [ngValue]="null" *ngIf="mode !== 1">-- Seleccione una Máquina --</option>
+                  <option [ngValue]="null" *ngIf="mode === 1 && !gps?.machine_id">N/A</option>
+                  <option *ngFor="let machine of machinesForSelection" [ngValue]="machine.id">
+                    {{ machine.name }} (ID: {{ machine.id }}) <!-- Asumiendo que Machine tiene 'name' -->
+                  </option>
+                </select>
+                <div *ngIf="trySend && formControls.machine_id?.errors" class="invalid-feedback">
+                  <strong *ngIf="formControls.machine_id.errors.required">La máquina asociada es requerida.</strong>
+                </div>
+              </div>
+            </div>
+
+            <hr>
+            <div class="row">
+              <div class="col-md-9 offset-md-3">
+                <button type="button" class="btn btn-secondary me-2" (click)="back()">
+                  <ng-container *ngIf="mode === 1">Volver</ng-container>
+                  <ng-container *ngIf="mode === 2 || mode === 3">Cancelar</ng-container>
+                </button>
+                <button *ngIf="mode === 2" type="submit" class="btn btn-primary" [disabled]="theFormGroup.invalid && trySend">Crear GPS</button>
+                <button *ngIf="mode === 3" type="submit" class="btn btn-primary" [disabled]="theFormGroup.invalid && trySend">Actualizar GPS</button>
+              </div>
+            </div>
+          </div>
+        </form>
+        <div *ngIf="!theFormGroup" class="card-body">
+            <p>Cargando formulario...</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
