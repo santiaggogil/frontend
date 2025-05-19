@@ -1,0 +1,143 @@
+<!-- pages/projects/manage/manage.component.html -->
+<div class="header bg-gradient-indigo pb-8 pt-5 pt-md-8">
+</div>
+
+<div class="container-fluid mt--7">
+  <div class="row">
+    <div class="col">
+      <div class="card shadow">
+        <div class="card-header bg-transparent">
+          <h3 class="mb-0" *ngIf="mode === 1">Detalle del Proyecto</h3>
+          <h3 class="mb-0" *ngIf="mode === 2">Crear Nuevo Proyecto</h3>
+          <h3 class="mb-0" *ngIf="mode === 3">Actualizar Proyecto</h3>
+        </div>
+        <div class="card-body px-lg-5 py-lg-5">
+          <!-- Añade *ngIf="theFormGroup" para asegurar que el formulario no se renderice antes de tiempo -->
+          <form class="form" *ngIf="theFormGroup" [formGroup]="theFormGroup" (ngSubmit)="onSubmit()">
+            <div class="container-fluid">
+
+              <div class="row mb-3" *ngIf="mode === 1 || mode === 3">
+                <label class="col-sm-3 col-form-label">ID</label>
+                <div class="col-sm-9">
+                  <input type="text" class="form-control" [value]="theProject?.id" disabled>
+                </div>
+              </div>
+
+              <!-- Nombre del Proyecto -->
+              <div class="row mb-3">
+                <label for="name" class="col-sm-3 col-form-label">Nombre</label>
+                <div class="col-sm-9">
+                  <input type="text" id="name" class="form-control" formControlName="name" [readOnly]="mode === 1">
+                  <!-- Usa el getter 'fg' y el operador de encadenamiento opcional '?.' -->
+                  <div *ngIf="fg.name?.errors && (fg.name?.dirty || fg.name?.touched || trySend)"
+                       class="text-danger small mt-1">
+                    <div *ngIf="fg.name?.errors?.required">El nombre es requerido.</div>
+                    <div *ngIf="fg.name?.errors?.minlength">El nombre debe tener al menos {{ fg.name?.errors?.minlength?.requiredLength }} caracteres.</div>
+                    <div *ngIf="fg.name?.errors?.maxlength">El nombre no puede exceder los {{ fg.name?.errors?.maxlength?.requiredLength }} caracteres.</div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Fecha de Inicio -->
+              <div class="row mb-3">
+                <label for="start_date" class="col-sm-3 col-form-label">Fecha de Inicio</label>
+                <div class="col-sm-9">
+                  <input type="datetime-local" id="start_date" class="form-control" formControlName="start_date" [readOnly]="mode === 1">
+                  <div *ngIf="fg.start_date?.errors && (fg.start_date?.dirty || fg.start_date?.touched || trySend)"
+                       class="text-danger small mt-1">
+                    <div *ngIf="fg.start_date?.errors?.required">La fecha de inicio es requerida.</div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Fecha de Finalización -->
+              <div class="row mb-3">
+                <label for="end_date" class="col-sm-3 col-form-label">Fecha de Finalización</label>
+                <div class="col-sm-9">
+                  <input type="datetime-local" id="end_date" class="form-control" formControlName="end_date" [readOnly]="mode === 1">
+                  <div *ngIf="fg.end_date?.errors && (fg.end_date?.dirty || fg.end_date?.touched || trySend)"
+                       class="text-danger small mt-1">
+                    <div *ngIf="fg.end_date?.errors?.required">La fecha de finalización es requerida.</div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Estado -->
+              <div class="row mb-3">
+                <label for="status" class="col-sm-3 col-form-label">Estado</label>
+                <div class="col-sm-9">
+                  <select id="status" class="form-control" formControlName="status" [attr.disabled]="mode === 1 ? true : null">
+                    <!-- <option [ngValue]="null" disabled>Seleccione un estado...</option> No necesario si hay valor por defecto -->
+                    <option *ngFor="let statusOption of statusOptions" [value]="statusOption">
+                      {{ statusOption | titlecase }}
+                    </option>
+                  </select>
+                  <div *ngIf="fg.status?.errors && (fg.status?.dirty || fg.status?.touched || trySend)"
+                       class="text-danger small mt-1">
+                    <div *ngIf="fg.status?.errors?.required">El estado es requerido.</div>
+                    <div *ngIf="fg.status?.errors?.maxlength">El estado no puede exceder los {{ fg.status?.errors?.maxlength?.requiredLength }} caracteres.</div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Presupuesto -->
+              <div class="row mb-3">
+                <label for="budget" class="col-sm-3 col-form-label">Presupuesto</label>
+                <div class="col-sm-9">
+                  <input type="number" id="budget" class="form-control" formControlName="budget" [readOnly]="mode === 1" step="0.01">
+                  <div *ngIf="fg.budget?.errors && (fg.budget?.dirty || fg.budget?.touched || trySend)"
+                       class="text-danger small mt-1">
+                    <div *ngIf="fg.budget?.errors?.required">El presupuesto es requerido.</div>
+                    <div *ngIf="fg.budget?.errors?.min">El presupuesto debe ser al menos {{ fg.budget?.errors?.min?.min }}.</div>
+                    <div *ngIf="fg.budget?.errors?.max">El presupuesto no puede ser mayor a {{ fg.budget?.errors?.max?.max }}.</div>
+                    <div *ngIf="fg.budget?.errors?.pattern">El presupuesto debe ser un número válido.</div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Ubicación -->
+              <div class="row mb-3">
+                <label for="location" class="col-sm-3 col-form-label">Ubicación</label>
+                <div class="col-sm-9">
+                  <input type="text" id="location" class="form-control" formControlName="location" [readOnly]="mode === 1">
+                  <div *ngIf="fg.location?.errors && (fg.location?.dirty || fg.location?.touched || trySend)"
+                       class="text-danger small mt-1">
+                    <div *ngIf="fg.location?.errors?.required">La ubicación es requerida.</div>
+                    <div *ngIf="fg.location?.errors?.minlength">La ubicación debe tener al menos {{ fg.location?.errors?.minlength?.requiredLength }} caracteres.</div>
+                    <div *ngIf="fg.location?.errors?.maxlength">La ubicación no puede exceder los {{ fg.location?.errors?.maxlength?.requiredLength }} caracteres.</div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Selección de Paquete -->
+              <div class="row mb-3">
+                <label for="package_id" class="col-sm-3 col-form-label">Paquete Asociado</label>
+                <div class="col-sm-9">
+                  <select id="package_id" class="form-control" formControlName="package_id" [attr.disabled]="mode === 1 ? true : null">
+                    <option [ngValue]="null" disabled>Seleccione un paquete...</option>
+                    <option *ngFor="let pkg of packages" [value]="pkg.id">
+                      {{ pkg.name }} (ID: {{ pkg.id }})
+                    </option>
+                  </select>
+                  <div *ngIf="fg.package_id?.errors && (fg.package_id?.dirty || fg.package_id?.touched || trySend)"
+                       class="text-danger small mt-1">
+                    <div *ngIf="fg.package_id?.errors?.required">Debe seleccionar un paquete.</div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="row mt-4">
+                <div class="col-sm-9 offset-sm-3 d-flex flex-column">
+                  <button *ngIf="mode === 1" type="button" class="btn btn-primary w-100 mb-2" (click)="back()">Volver al Listado</button>
+                  <button *ngIf="mode === 2" type="submit" class="btn btn-success w-100 mb-2" [disabled]="theFormGroup.invalid && trySend">Crear Proyecto</button>
+                  <button *ngIf="mode === 3" type="submit" class="btn btn-warning w-100 mb-2" [disabled]="theFormGroup.invalid && trySend">Actualizar Proyecto</button>
+                  <button *ngIf="mode === 2 || mode === 3" type="button" class="btn btn-secondary w-100" (click)="back()">Cancelar</button>
+                </div>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

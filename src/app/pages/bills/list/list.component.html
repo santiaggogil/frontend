@@ -1,0 +1,44 @@
+<div class="header bg-gradient-danger pb-8 pt-5 pt-md-8">
+</div>
+<!-- Page content -->
+<div class="container-fluid mt--7">
+  <!-- Table -->
+  <div class="row">
+    <div class="col">
+      <div class="card shadow">
+        <div class="card-header bg-transparent">
+          <h3 class="mb-0">Facturas</h3>
+        </div>
+        <div class="card-body">
+          <div class="table-responsive">
+            <table class="table">
+              <tr>
+                <th scope="col">ID</th>
+                <th scope="col">Issue Date</th>
+                <th scope="col">Due Date</th>
+                <th scope="col">Total</th>
+                <th scope="col">Estado</th>
+                <th scope="col" class="text-left" > <!-- Celda para el botón Crear, alineado a la derecha -->
+                  <button class="btn btn-success" (click)="create()">Crear</button>
+                </th>
+              </tr>
+              <tr *ngFor="let bill of bills">
+                <td>{{ bill.id }}</td>
+                <td>{{ bill.issue_date }}</td>
+                <td>{{ bill.due_date }}</td>
+                <td>{{ bill.total_amount }}</td>
+                <td>{{ bill.status }}</td>
+                <td>
+                  <button class="btn btn-primary" (click)="edit(bill.id)">Editar</button>
+                  <button class="btn btn-primary" (click)="view(bill.id)">Ver</button>
+                  <button class="btn btn-danger" (click)="delete(bill.id)">Eliminar</button>
+                </td>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+

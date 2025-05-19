@@ -1,0 +1,55 @@
+<!-- pages/chats/manage/manage.component.html -->
+<div class="header bg-gradient-default pb-8 pt-5 pt-md-8"> <!-- Puedes cambiar el color -->
+</div>
+
+<div class="container-fluid mt--7">
+  <div class="row">
+    <div class="col">
+      <div class="card shadow">
+        <div class="card-header bg-transparent">
+          <h3 class="mb-0" *ngIf="mode === 1">Detalle del Chat</h3>
+          <h3 class="mb-0" *ngIf="mode === 2">Crear Nuevo Chat</h3>
+          <h3 class="mb-0" *ngIf="mode === 3">Actualizar Chat</h3>
+        </div>
+        <div class="card-body px-lg-5 py-lg-5">
+          <form class="form" *ngIf="theFormGroup" [formGroup]="theFormGroup" (ngSubmit)="onSubmit()">
+            <div class="container-fluid">
+
+              <div class="row mb-3" *ngIf="mode === 1 || mode === 3">
+                <label class="col-sm-3 col-form-label">ID Chat</label>
+                <div class="col-sm-9">
+                  <input type="text" class="form-control" [value]="theChat?.id" disabled>
+                </div>
+              </div>
+
+              <!-- Nombre del Chat -->
+              <div class="row mb-3">
+                <label for="name" class="col-sm-3 col-form-label">Nombre del Chat</label>
+                <div class="col-sm-9">
+                  <input type="text" id="name" class="form-control" formControlName="name" [readOnly]="mode === 1">
+                  <div *ngIf="fg.name?.errors && (fg.name?.dirty || fg.name?.touched || trySend)"
+                       class="text-danger small mt-1">
+                    <div *ngIf="fg.name?.errors?.required">El nombre es requerido.</div>
+                    <div *ngIf="fg.name?.errors?.minlength">El nombre debe tener al menos {{ fg.name?.errors?.minlength?.requiredLength }} caracteres.</div>
+                    <div *ngIf="fg.name?.errors?.maxlength">El nombre no puede exceder los {{ fg.name?.errors?.maxlength?.requiredLength }} caracteres.</div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Botones de Acción -->
+              <div class="row mt-4">
+                <div class="col-sm-9 offset-sm-3 d-flex flex-column">
+                  <button *ngIf="mode === 1" type="button" class="btn btn-primary w-100 mb-2" (click)="back()">Volver al Listado</button>
+                  <button *ngIf="mode === 2" type="submit" class="btn btn-success w-100 mb-2" [disabled]="theFormGroup.invalid && trySend">Crear Chat</button>
+                  <button *ngIf="mode === 3" type="submit" class="btn btn-warning w-100 mb-2" [disabled]="theFormGroup.invalid && trySend">Actualizar Chat</button>
+                  <button *ngIf="mode === 2 || mode === 3" type="button" class="btn btn-secondary w-100" (click)="back()">Cancelar</button>
+                </div>
+              </div>
+
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

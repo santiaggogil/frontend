@@ -1,0 +1,98 @@
+<!-- pages/evidences/manage/manage.component.html -->
+<div class="header bg-gradient-primary pb-8 pt-5 pt-md-8"> <!-- Cambiado color para diferenciar -->
+</div>
+
+<div class="container-fluid mt--7">
+  <div class="row">
+    <div class="col">
+      <div class="card shadow">
+        <div class="card-header bg-transparent">
+          <h3 class="mb-0" *ngIf="mode === 1">Detalle de la Evidencia</h3>
+          <h3 class="mb-0" *ngIf="mode === 2">Registrar Nueva Evidencia</h3>
+          <h3 class="mb-0" *ngIf="mode === 3">Actualizar Evidencia</h3>
+        </div>
+        <div class="card-body px-lg-5 py-lg-5">
+          <form class="form" *ngIf="theFormGroup" [formGroup]="theFormGroup" (ngSubmit)="onSubmit()">
+            <div class="container-fluid">
+
+              <div class="row mb-3" *ngIf="mode === 1 || mode === 3">
+                <label class="col-sm-3 col-form-label">ID</label>
+                <div class="col-sm-9">
+                  <input type="text" class="form-control" [value]="theEvidence?.id" disabled>
+                </div>
+              </div>
+
+              <!-- Marca -->
+              <div class="row mb-3">
+                <label for="brand" class="col-sm-3 col-form-label">Marca</label>
+                <div class="col-sm-9">
+                  <input type="text" id="brand" class="form-control" formControlName="brand" [readOnly]="mode === 1">
+                  <div *ngIf="getTheFormGroup.brand.errors && (getTheFormGroup.brand.dirty || getTheFormGroup.brand.touched || trySend)"
+                       class="text-danger small mt-1">
+                    <div *ngIf="getTheFormGroup.brand.errors.required">La marca es requerida.</div>
+                    <div *ngIf="getTheFormGroup.brand.errors.maxlength">La marca no puede exceder los {{ getTheFormGroup.brand.errors.maxlength?.requiredLength }} caracteres.</div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Modelo -->
+              <div class="row mb-3">
+                <label for="model" class="col-sm-3 col-form-label">Modelo</label>
+                <div class="col-sm-9">
+                  <input type="text" id="model" class="form-control" formControlName="model" [readOnly]="mode === 1">
+                  <div *ngIf="getTheFormGroup.model.errors && (getTheFormGroup.model.dirty || getTheFormGroup.model.touched || trySend)"
+                       class="text-danger small mt-1">
+                    <div *ngIf="getTheFormGroup.model.errors.required">El modelo es requerido.</div>
+                    <div *ngIf="getTheFormGroup.model.errors.maxlength">El modelo no puede exceder los {{ getTheFormGroup.model.errors.maxlength?.requiredLength }} caracteres.</div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Número de Serie -->
+              <div class="row mb-3">
+                <label for="serial_number" class="col-sm-3 col-form-label">Número de Serie</label>
+                <div class="col-sm-9">
+                  <input type="text" id="serial_number" class="form-control" formControlName="serial_number" [readOnly]="mode === 1">
+                  <div *ngIf="getTheFormGroup.serial_number.errors && (getTheFormGroup.serial_number.dirty || getTheFormGroup.serial_number.touched || trySend)"
+                       class="text-danger small mt-1">
+                    <div *ngIf="getTheFormGroup.serial_number.errors.required">El número de serie es requerido.</div>
+                    <div *ngIf="getTheFormGroup.serial_number.errors.maxlength">El número de serie no puede exceder los {{ getTheFormGroup.serial_number.errors.maxlength?.requiredLength }} caracteres.</div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Selección de Servicio -->
+              <div class="row mb-3">
+                <label for="service_id" class="col-sm-3 col-form-label">Servicio Asociado</label>
+                <div class="col-sm-9">
+                  <select id="service_id" class="form-control" formControlName="service_id" [attr.disabled]="mode === 1 ? true : null">
+                    <option [ngValue]="null" disabled>Seleccione un servicio...</option>
+                    <option *ngFor="let service of services" [value]="service.id">
+                      {{ service.name }} (ID: {{ service.id }})
+                    </option>
+                  </select>
+                  <div *ngIf="getTheFormGroup.service_id.errors && (getTheFormGroup.service_id.dirty || getTheFormGroup.service_id.touched || trySend)"
+                       class="text-danger small mt-1">
+                    <div *ngIf="getTheFormGroup.service_id.errors.required">Debe seleccionar un servicio.</div>
+                  </div>
+                </div>
+              </div>
+
+
+              <!-- Botones de Acción -->
+              <div class="row mt-4">
+                <div class="col-sm-9 offset-sm-3 d-flex flex-column">
+                  <button *ngIf="mode === 1" type="button" class="btn btn-primary w-100 mb-2" (click)="back()">Volver al Listado</button>
+                  <button *ngIf="mode === 2" type="submit" class="btn btn-success w-100 mb-2" [disabled]="theFormGroup.invalid && trySend">Registrar Evidencia</button>
+                  <button *ngIf="mode === 3" type="submit" class="btn btn-warning w-100 mb-2" [disabled]="theFormGroup.invalid && trySend">Actualizar Evidencia</button>
+                  <button *ngIf="mode === 2 || mode === 3" type="button" class="btn btn-secondary w-100" (click)="back()">Cancelar</button>
+                </div>
+              </div>
+
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
