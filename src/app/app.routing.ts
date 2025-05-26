@@ -272,6 +272,23 @@ const routes: Routes =[
         loadChildren: () => import('src/app/pages/state-governor/state-governor.module').then(m => m.StateGovernorModule)
       }
     ]
+  },{
+    path: 'gps',
+    children: [
+      {
+        path: '',
+        loadChildren: () => import('src/app/pages/gps/gps.module').then(m => m.GpsModule)
+      }
+    ]
+  },
+  {
+    path: 'maintenanceProcedures',
+    children: [
+      {
+        path: '',
+        loadChildren: () => import('src/app/pages/maintenance-procedures/maintenance-procedures.module').then(m => m.MaintenanceProceduresModule)
+      }
+    ]
   }
 
 ];
