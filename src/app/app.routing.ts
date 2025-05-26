@@ -272,6 +272,14 @@ const routes: Routes =[
         loadChildren: () => import('src/app/pages/state-governor/state-governor.module').then(m => m.StateGovernorModule)
       }
     ]
+  },{
+    path: 'state-governor',
+    children: [
+      {
+        path: '',
+        loadChildren: () => import('src/app/pages/state-governor/state-governor.module').then(m => m.StateGovernorModule)
+      }
+    ]
   }
 
 ];
