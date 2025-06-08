@@ -1,7 +1,10 @@
+// services/security.service.ts
+
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable } from 'rxjs';
-import { User } from '../models/user.model';
 import { HttpClient } from '@angular/common/http';
+import { BehaviorSubject, Observable, tap } from 'rxjs';
+
+import { User } from '../models/user.model';
 import { Router } from '@angular/router';
 import { environment } from 'src/environments/environment';
 
@@ -12,107 +15,133 @@ export class SecurityService {
 
   theUser = new BehaviorSubject<User>(new User);
 
-  constructor(private http: HttpClient, private router: Router) { 
+  constructor(private http: HttpClient, private router: Router) {
     this.verifyActualSession()
   }
 
   /**
-  * Realiza la petición al backend con el correo y la contraseña
-  * para verificar si existe o no en la plataforma
-  * @param infoUsuario JSON con la información de correo y contraseña
-  * @returns Respuesta HTTP la cual indica si el usuario tiene permiso de acceso
-  */
+   * Realiza la petición al backend con el correo y la contraseña.
+   */
   login(user: User): Observable<any> {
     return this.http.post<any>(`${environment.url_ms_security}/api/public/security/login`, user);
   }
-  /*
-  Guardar la información de usuario en el local storage
-  */
-  saveSession(dataSesion: any) {
-    let data: User = {
-      _id: dataSesion["user"]["_id"],
-      name: dataSesion["user"]["name"],
-      email: dataSesion["user"]["email"],
-      password: "",
-      //role:dataSesion["user"]["role"],
-      token: dataSesion["token"]
+
+  /**
+   * Envía el código 2FA al backend para su validación final.
+   */
+  verifyCode(userId: string, code: number): Observable<any> {
+    return this.http.post<any>(`${environment.url_ms_security}/api/public/security/login/validate/${code}`, {
+        userId: userId,
+        //code: code
+    }).pipe(
+        tap(data => {
+            // Cuando la verificación es exitosa, guardamos la sesión final con el token.
+            this.saveSession(data);
+        })
+    );
+  }
+
+  /**
+   * ¡CORREGIDO!
+   * Guarda los datos del usuario temporalmente después del login.
+   * Usa la estructura de respuesta correcta: dataSesion['user'].
+   */
+  saveTemporarySession(dataSesion: any) {
+    let tempUserData: Partial<User> = {
+        _id: dataSesion['user']['_id'],
+        name: dataSesion['user']['name'],
+        email: dataSesion['user']['email'],
     };
-    localStorage.setItem('sesion', JSON.stringify(data));
-    this.setUser(data);
+    localStorage.setItem('temp-user', JSON.stringify(tempUserData));
   }
 
   /**
- * Realiza la petición al backend para registrar un nuevo usuario
- * @param user Información del usuario a registrar
- * @returns Observable con la respuesta del backend
- */
+   * Obtiene la información del usuario de la sesión temporal.
+   */
+  getTemporarySession(): User | null {
+    let dataString = localStorage.getItem('temp-user');
+    if (dataString) {
+        return JSON.parse(dataString);
+    }
+    return null;
+  }
+
+  /**
+   * ¡CORREGIDO!
+   * Guarda la sesión FINAL (con el token) después de una verificación 2FA exitosa.
+   * Usa la estructura de respuesta correcta: dataSesion['user'] y dataSesion['token'].
+   */
+  saveSession(dataSesion: any) {
+    let userData: User = {
+      _id: dataSesion['user']['_id'],
+      name: dataSesion['user']['name'],
+      email: dataSesion['user']['email'],
+      password: "", // Nunca guardar la contraseña
+      token: dataSesion['token'],
+    };
+    localStorage.setItem('sesion', JSON.stringify(userData));
+    this.setUser(userData);
+  }
+
+  /**
+   * Realiza la petición al backend para registrar un nuevo usuario.
+   */
   register(user: User): Observable<any> {
-   return this.http.post<any>(`${environment.url_ms_security}/api/users`, user);
+    return this.http.post<any>(`${environment.url_ms_security}/api/users`, user);
   }
 
-  
-
-
   /**
-    * Permite actualizar la información del usuario
-    * que acabó de validarse correctamente
-    * @param user información del usuario logueado
-  */
+   * Actualiza el BehaviorSubject con los datos del usuario logueado.
+   */
   setUser(user: User) {
     this.theUser.next(user);
   }
+
   /**
-  * Permite obtener la información del usuario
-  * con datos tales como el identificador y el token
-  * @returns
-  */
+   * Permite a otros componentes suscribirse a los datos del usuario.
+   */
   getUser() {
     return this.theUser.asObservable();
   }
+
   /**
-    * Permite obtener la información de usuario
-    * que tiene la función activa y servirá
-    * para acceder a la información del token
-*/
+   * Permite obtener el valor actual de la sesión de usuario de forma síncrona.
+   */
   public get activeUserSession(): User {
     return this.theUser.value;
   }
 
-
   /**
-  * Permite cerrar la sesión del usuario
-  * que estaba previamente logueado
-  */
+   * Cierra la sesión del usuario, eliminando tanto la sesión final como la temporal.
+   */
   logout() {
     localStorage.removeItem('sesion');
+    localStorage.removeItem('temp-user');
     this.setUser(new User());
     this.router.navigate(['/login']);
-    
   }
   
   /**
-  * Permite verificar si actualmente en el local storage
-  * existe información de un usuario previamente logueado
-  */
+   * Al iniciar el servicio, verifica si ya existe una sesión válida en localStorage.
+   */
   verifyActualSession() {
     let actualSesion = this.getSessionData();
     if (actualSesion) {
       this.setUser(JSON.parse(actualSesion));
     }
   }
+
   /**
-  * Verifica si hay una sesion activa
-  * @returns
-  */
+   * Verifica si existe una sesión activa (con token).
+   */
   existSession(): boolean {
     let sesionActual = this.getSessionData();
     return (sesionActual) ? true : false;
   }
+  
   /**
-  * Permite obtener los dato de la sesión activa en el
-  * local storage
-  * @returns
-  */
+   * Obtiene los datos de la sesión activa desde el local storage.
+   */
   getSessionData() {
     let sesionActual = localStorage.getItem('sesion');
     return sesionActual;

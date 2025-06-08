@@ -1,48 +1,34 @@
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
-import { RouterModule } from '@angular/router';
+import { HttpClientModule } from '@angular/common/http';
+import { RouterModule } from '@angular/router'; // <-- IMPORTANTE: Para el ruteo
 
 import { AppComponent } from './app.component';
 import { AdminLayoutComponent } from './layouts/admin-layout/admin-layout.component';
 import { AuthLayoutComponent } from './layouts/auth-layout/auth-layout.component';
 
-import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap'; // <-- IMPORTANTE: Para [ngbCollapse] y otros
 
 import { AppRoutingModule } from './app.routing';
-import { ComponentsModule } from './components/components.module';
-import { ReactiveFormsModule } from '@angular/forms';
-import { AuthInterceptor } from './interceptors/auth.interceptor';
-import { AuthenticatedGuard } from './guards/authenticated.guard';
-import { NoAuthenticatedGuard } from './guards/no-authenticated.guard';
-
+import { ComponentsModule } from './components/components.module'; // <-- IMPORTANTE: Para app-sidebar, etc.
 
 @NgModule({
   imports: [
     BrowserAnimationsModule,
     FormsModule,
     HttpClientModule,
-    ComponentsModule,
-    NgbModule,
-    RouterModule,
+    ComponentsModule,   // <-- AÑADIDO: Provee app-sidebar, app-navbar, app-footer
+    NgbModule,          // <-- AÑADIDO: Provee [ngbCollapse]
+    RouterModule,       // <-- AÑADIDO: Provee <router-outlet> y [routerLink]
     AppRoutingModule,
-    ReactiveFormsModule,
   ],
   declarations: [
     AppComponent,
     AdminLayoutComponent,
     AuthLayoutComponent
   ],
-  providers: [
-    {
-      provide: HTTP_INTERCEPTORS,
-      useClass: AuthInterceptor,
-      multi: true,
-    },
-    AuthenticatedGuard,
-    NoAuthenticatedGuard
-  ],
+  providers: [],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

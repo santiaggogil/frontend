@@ -17,8 +17,8 @@ export class LoginComponent implements OnInit, OnDestroy {
   login() {
     this.securityService.login(this.user).subscribe({
       next: (data) => {
-        this.securityService.saveSession(data)
-        this.router.navigate(["dashboard"])
+        this.securityService.saveTemporarySession(data)
+        this.router.navigate(["/verify-code"]) // <-----
       },
       error: (error) => {
         Swal.fire("Autenticación Inválida", "Usuario o contraseña inválido", "error")

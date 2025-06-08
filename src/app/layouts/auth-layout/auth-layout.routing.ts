@@ -1,6 +1,6 @@
 import { Routes } from '@angular/router';
 
-import { LoginComponent } from '../../pages/login/login.component';
+import { LoginComponent } from '../../pages/login-page/login/login.component';
 import { RegisterComponent } from '../../pages/register-page/register/register.component';
 import { NoAuthenticatedGuard } from 'src/app/guards/no-authenticated.guard';
 import { log } from 'console';
