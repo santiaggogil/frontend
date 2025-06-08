@@ -11,7 +11,8 @@ import { environment } from 'src/environments/environment';
 export class SecurityService {
 
   theUser = new BehaviorSubject<User>(new User);
-  constructor(private http: HttpClient) { 
+
+  constructor(private http: HttpClient, private router: Router) { 
     this.verifyActualSession()
   }
 
@@ -39,6 +40,19 @@ export class SecurityService {
     localStorage.setItem('sesion', JSON.stringify(data));
     this.setUser(data);
   }
+
+  /**
+ * Realiza la petición al backend para registrar un nuevo usuario
+ * @param user Información del usuario a registrar
+ * @returns Observable con la respuesta del backend
+ */
+  register(user: User): Observable<any> {
+   return this.http.post<any>(`${environment.url_ms_security}/api/users`, user);
+  }
+
+  
+
+
   /**
     * Permite actualizar la información del usuario
     * que acabó de validarse correctamente
@@ -72,7 +86,10 @@ export class SecurityService {
   logout() {
     localStorage.removeItem('sesion');
     this.setUser(new User());
+    this.router.navigate(['/login']);
+    
   }
+  
   /**
   * Permite verificar si actualmente en el local storage
   * existe información de un usuario previamente logueado

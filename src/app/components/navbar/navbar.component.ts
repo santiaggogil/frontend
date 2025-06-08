@@ -5,6 +5,7 @@ import { Router } from '@angular/router';
 import { User } from 'src/app/models/user.model';
 import { Subscription } from 'rxjs';
 import { SecurityService } from 'src/app/services/security.service';
+import { WebSocketService } from 'src/app/services/web-socket-service.service';
 
 @Component({
   selector: 'app-navbar',
@@ -17,7 +18,7 @@ export class NavbarComponent implements OnInit {
   public location: Location;
   user: User;
   subscription: Subscription;
-  constructor(location: Location,  private element: ElementRef, private router: Router,  private securityService: SecurityService) {
+  constructor(location: Location,  private element: ElementRef, private router: Router,  private securityService: SecurityService, private webSocketService: WebSocketService) {
     this.location = location;
     this.subscription = this.securityService.getUser().subscribe(user => {
       this.user = user;
@@ -27,7 +28,12 @@ export class NavbarComponent implements OnInit {
 
   ngOnInit() {
     this.listTitles = ROUTES.filter(listTitle => listTitle);
+    this.webSocketService.setNameEvent("Notifications"); // el notifications es lo que le va llevar al del backend - stateController . tiene que concordar con el backend 
+    this.webSocketService.callback.subscribe((res: any) => {
+        console.log('Notificacion recibida:', res);
+    });
   }
+
   getTitle(){
     var titlee = this.location.prepareExternalUrl(this.location.path());
     if(titlee.charAt(0) === '#'){
@@ -40,6 +46,10 @@ export class NavbarComponent implements OnInit {
         }
     }
     return 'Dashboard';
+  }
+
+  logout() {
+    this.securityService.logout();
   }
 
 }
