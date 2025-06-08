@@ -5,7 +5,7 @@
 export const environment = {
   production: false,
   url_ms_business: "http://localhost:3333",
-  url_ms_security:"http://localhost:8083"
+  url_ms_security:"http://localhost:8080"
 };
 
 
