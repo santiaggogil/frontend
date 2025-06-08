@@ -29,9 +29,9 @@ export class SecurityService {
   /**
    * Envía el código 2FA al backend para su validación final.
    */
-  verifyCode(userId: string, code: number): Observable<any> {
+  verifyCode(email: string, code: number): Observable<any> {
     return this.http.post<any>(`${environment.url_ms_security}/api/public/security/login/validate/${code}`, {
-        userId: userId,
+        email: email,
         //code: code
     }).pipe(
         tap(data => {

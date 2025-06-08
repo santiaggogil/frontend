@@ -42,7 +42,7 @@ export class VerifyCodeComponent implements OnInit {
       return;
     }
 
-    this.securityService.verifyCode(this.user._id, this.code).subscribe({
+    this.securityService.verifyCode(this.user.email, this.code).subscribe({
       next: (data) => {
         // El servicio ya guardó la sesión con el token gracias al operador 'tap'.
         // Solo necesitamos redirigir al dashboard.
