@@ -1,11 +1,12 @@
-<div class="header bg-gradient-danger py-7 py-lg-8">
+<div class="header bg-gradient-primary py-7 py-lg-8">
   <div class="container">
     <div class="header-body text-center mb-7">
       <div class="row justify-content-center">
         <div class="col-lg-5 col-md-6">
-          <h1 class="text-white">Welcome!</h1>
-          <p class="text-lead text-light">Use these awesome forms to login or create new account in your project for
-            free.</p>
+          <h1 class="text-white">¡Bienvenido a TransPortex!</h1>
+          <p class="text-lead text-light">
+            Regístrate para gestionar tus envíos y productos de manera eficiente y segura.
+          </p>
         </div>
       </div>
     </div>
@@ -23,11 +24,10 @@
     <div class="col-lg-6 col-md-8">
       <div class="card bg-secondary shadow border-0">
         <div class="card-header bg-transparent pb-5">
-          <div class="text-muted text-center mt-2 mb-4"><small>Sign up with</small></div>
+          <div class="text-muted text-center mt-2 mb-4"><small>Regístrate con</small></div>
           <div class="text-center">
             <a href="javascript:void(0)" class="btn btn-neutral btn-icon mr-4">
-              <span class="btn-inner--icon"><img src="assets/img/icons/common/github.svg"></span>
-              <span class="btn-inner--text">Github</span>
+              <span class="btn-inner--text">Microsoft</span>
             </a>
             <a href="javascript:void(0)" class="btn btn-neutral btn-icon">
               <span class="btn-inner--icon"><img src="assets/img/icons/common/google.svg"></span>
@@ -37,15 +37,15 @@
         </div>
         <div class="card-body px-lg-5 py-lg-5">
           <div class="text-center text-muted mb-4">
-            <small>Or sign up with credentials</small>
+            <small>O regístrate con tus datos</small>
           </div>
           <form [formGroup]="registerForm" (ngSubmit)="register()">
             <div class="form-group">
               <div class="input-group input-group-alternative mb-3">
                 <div class="input-group-prepend">
-                  <span class="input-group-text"><i class="ni ni-hat-3"></i></span>
+                  <span class="input-group-text"><i class="ni ni-delivery-fast"></i></span>
                 </div>
-                <input class="form-control" placeholder="Name" type="text" formControlName="name">
+                <input class="form-control" placeholder="Nombre completo" type="text" formControlName="name">
               </div>
             </div>
             <div class="form-group">
@@ -53,7 +53,7 @@
                 <div class="input-group-prepend">
                   <span class="input-group-text"><i class="ni ni-email-83"></i></span>
                 </div>
-                <input class="form-control" placeholder="Email" type="email" formControlName="email">
+                <input class="form-control" placeholder="Correo electrónico" type="email" formControlName="email">
               </div>
             </div>
             <div class="form-group">
@@ -61,11 +61,11 @@
                 <div class="input-group-prepend">
                   <span class="input-group-text"><i class="ni ni-lock-circle-open"></i></span>
                 </div>
-                <input class="form-control" placeholder="Password" type="password" formControlName="password">
+                <input class="form-control" placeholder="Contraseña" type="password" formControlName="password">
               </div>
             </div>
             <div class="text-center">
-              <button type="submit" class="btn btn-primary mt-4">Create account</button>
+              <button type="submit" class="btn btn-primary mt-4">Crear cuenta</button>
             </div>
           </form>
         </div>

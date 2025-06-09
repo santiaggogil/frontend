@@ -32,7 +32,6 @@ export class SecurityService {
   verifyCode(email: string, code: number): Observable<any> {
     return this.http.post<any>(`${environment.url_ms_security}/api/public/security/login/validate/${code}`, {
         email: email,
-        //code: code
     }).pipe(
         tap(data => {
             // Cuando la verificación es exitosa, guardamos la sesión final con el token.
@@ -87,7 +86,7 @@ export class SecurityService {
    * Realiza la petición al backend para registrar un nuevo usuario.
    */
   register(user: User): Observable<any> {
-    return this.http.post<any>(`${environment.url_ms_security}/api/users`, user);
+    return this.http.post<any>(`${environment.url_ms_security}/api/public/users`, user);
   }
 
   /**
@@ -145,5 +144,28 @@ export class SecurityService {
   getSessionData() {
     let sesionActual = localStorage.getItem('sesion');
     return sesionActual;
+  }
+
+  /**
+   * Obtiene únicamente el token de la sesión activa.
+   * Esto es para que otros servicios puedan usarlo fácilmente.
+   */
+  getToken(): string | null {
+    let sesionData = this.getSessionData();
+    if (sesionData) {
+      let userSession = JSON.parse(sesionData);
+      return userSession.token;
+    }
+    return null;
+  }
+
+  // ... dentro de la clase SecurityService
+
+  /**
+   * Solicita una nueva contraseña para el correo proporcionado.
+   */
+  forgotPassword(email: string): Observable<any> {
+    const url = `${environment.url_ms_security}/api/public/security/forgot-password`;
+    return this.http.post<any>(url, { email });
   }
 }

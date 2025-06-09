@@ -1,12 +1,15 @@
 <!-- pages/login-page/verify-code/verify-code.component.html -->
 
-<div class="header bg-gradient-danger py-7 py-lg-8">
+<div class="header bg-gradient-primary py-7 py-lg-8">
   <div class="container">
     <div class="header-body text-center mb-7">
       <div class="row justify-content-center">
         <div class="col-lg-5 col-md-6">
-          <h1 class="text-white">Verificación de dos pasos</h1>
-          <p class="text-lead text-light">Hemos enviado un código de seguridad a tu correo electrónico. Por favor, ingrésalo a continuación para completar el inicio de sesión.</p>
+          <h1 class="text-white">Verificación de Seguridad</h1>
+          <p class="text-lead text-light">
+            Hemos enviado un código de seguridad a tu correo electrónico registrado en Transportes XYZ.<br>
+            Por favor, ingrésalo a continuación para acceder al sistema de seguimiento de envíos.
+          </p>
         </div>
       </div>
     </div>
@@ -24,13 +27,13 @@
       <div class="card bg-secondary shadow border-0">
         <div class="card-body px-lg-5 py-lg-5">
           <div class="text-center text-muted mb-4">
-            <small>Ingresa tu código de verificación</small>
+            <small>Ingresa el código de verificación para acceder al panel de envíos</small>
           </div>
           <form role="form" (ngSubmit)="verify()" #verifyForm="ngForm">
             <div class="form-group mb-3">
               <div class="input-group input-group-alternative">
                 <div class="input-group-prepend">
-                  <span class="input-group-text"><i class="ni ni-key-25"></i></span>
+                  <span class="input-group-text"><i class="ni ni-delivery-fast"></i></span>
                 </div>
                 <!-- Usamos ngModel para vincular el input a una propiedad en el .ts -->
                 <input class="form-control" 
@@ -44,14 +47,18 @@
             
             <div class="text-center">
               <!-- El botón ahora llama a la función verify() -->
-              <button type="submit" class="btn btn-primary my-4" [disabled]="!verifyForm.form.valid">Verificar e Ingresar</button>
+              <button type="submit" class="btn btn-primary my-4" [disabled]="!verifyForm.form.valid">
+                Verificar y Acceder
+              </button>
             </div>
           </form>
         </div>
       </div>
        <div class="row mt-3">
         <div class="col-12 text-center">
-          <a href="javascript:void(0)" (click)="goBackToLogin()" class="text-light"><small>Volver al Login</small></a>
+          <a href="javascript:void(0)" (click)="goBackToLogin()" class="text-light">
+            <small>Volver al inicio de sesión</small>
+          </a>
         </div>
       </div>
     </div>

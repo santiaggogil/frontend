@@ -11,7 +11,9 @@ import { AuthLayoutComponent } from './layouts/auth-layout/auth-layout.component
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap'; // <-- IMPORTANTE: Para [ngbCollapse] y otros
 
 import { AppRoutingModule } from './app.routing';
-import { ComponentsModule } from './components/components.module'; // <-- IMPORTANTE: Para app-sidebar, etc.
+import { ComponentsModule } from './components/components.module';
+import { LoginSuccessComponent } from './pages/login-success/login-success.component';
+import { ForgotPasswordComponent } from './pages/forgot-password/forgot-password.component'; // <-- IMPORTANTE: Para app-sidebar, etc.
 
 @NgModule({
   imports: [
@@ -26,7 +28,9 @@ import { ComponentsModule } from './components/components.module'; // <-- IMPORT
   declarations: [
     AppComponent,
     AdminLayoutComponent,
-    AuthLayoutComponent
+    AuthLayoutComponent,
+    LoginSuccessComponent,
+    ForgotPasswordComponent
   ],
   providers: [],
   bootstrap: [AppComponent]

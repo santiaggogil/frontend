@@ -20,6 +20,7 @@ import { RegisterPageModule } from '../../pages/register-page/register-page.modu
   declarations: [
     //LoginComponent,
     //RegisterComponent se importa a través de RegisterPageModule
+    
   ]
 })
 export class AuthLayoutModule { }

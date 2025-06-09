@@ -17,6 +17,6 @@ export class AuthenticatedGuard implements CanActivate {
       this.router.navigate(['/login'])
       return false;
     }
-    //HACER UN LLAMADO AL BACKEND para saber si el usuario tiene el permiso necesario
+    
   }
 }

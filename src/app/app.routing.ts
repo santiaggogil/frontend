@@ -5,6 +5,9 @@ import { Routes, RouterModule } from '@angular/router';
 
 import { AdminLayoutComponent } from './layouts/admin-layout/admin-layout.component';
 import { AuthLayoutComponent } from './layouts/auth-layout/auth-layout.component';
+import { LoginSuccessComponent } from './pages/login-success/login-success.component';
+import { NoAuthenticatedGuard } from './guards/no-authenticated.guard';
+import { AuthenticatedGuard } from './guards/authenticated.guard';
 
 const routes: Routes = [
   {
@@ -13,12 +16,17 @@ const routes: Routes = [
     pathMatch: 'full',
   },
   {
+    path: 'login-success',
+    component: LoginSuccessComponent
+  },
+  {
     path: '', // Las rutas bajo este path NO llevan un prefijo. Ej: /dashboard, /tables
     component: AdminLayoutComponent,
     children: [
       {
         // Carga perezosamente todas las rutas definidas en AdminLayoutModule
         path: '',
+        canActivate: [AuthenticatedGuard], 
         loadChildren: () => import('src/app/layouts/admin-layout/admin-layout.module').then(m => m.AdminLayoutModule)
       }
     ]
@@ -52,6 +60,10 @@ const routes: Routes = [
     redirectTo: 'dashboard'
   }
 ];
+
+// ...existing imports...
+
+
 
 // Nota: He eliminado las rutas específicas como 'states', 'specialties', etc., del archivo principal.
 // Estas rutas DEBEN estar definidas DENTRO del `admin-layout.routing.ts`
